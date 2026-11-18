@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apuntes Biomédicos: Ultrasonido y Ventilación</title>
+    
+    <!-- MathJax para las fórmulas matemáticas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        /* =========================================
+           VARIABLES DE COLOR Y ESTILOS GENERALES
+           ========================================= */
+        :root {
+            --bg-main: #f4f7f6;
+            --text-main: #2c3e50;
+            --text-light: #64748b;
+            --bg-card: #ffffff;
+            --us-color: #10b981; /* Verde Ultrasonido */
+            --vent-color: #2563eb; /* Azul oscuro Ventilación */
+            --current-accent: #10b981; /* Por defecto verde */
+        }
+
+        html, body { 
+            margin: 0; 
+            padding: 0; 
+            background-color: var(--bg-main); 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            color: var(--text-main); 
+        }
+        .wrapper { 
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh; 
+            padding: 40px 20px; 
+            box-sizing: border-box; 
+        }
+        .container { 
+            background-color: var(--bg-card); 
+            max-width: 1000px; 
+            width: 100%; 
+            padding: 40px 60px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+            border-radius: 12px;
+            height: fit-content; 
+            border-top: 6px solid var(--current-accent); 
+            transition: border-color 0.3s ease;
+        }
+
+        /* =========================================
+           PORTADA / ENCABEZADO Y BUSCADOR
+           ========================================= */
+        header { 
+            display: flex; 
+            flex-direction: column; 
+            border-bottom: 2px solid #e2e8f0; 
+            padding-bottom: 20px; 
+            margin-bottom: 30px; 
+        }
+        .portada {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .portada h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: var(--text-main);
+        }
+        .portada h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 15px 0;
+            color: var(--current-accent);
+            border: none;
+            padding: 0;
+        }
+        .portada p {
+            font-size: 15px;
+            margin: 5px 0;
+            color: var(--text-light);
+            text-align: center;
+        }
+        .portada .autor {
+            font-style: italic;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        .portada .creditos {
+            font-size: 12px;
+            margin-top: 15px;
+            color: #94a3b8;
+        }
+        
+        .doc-selector { 
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 20px; 
+            background-color: #f1f5f9; 
+            padding: 6px; 
+            border-radius: 8px; 
+        }
+        .doc-selector button { 
+            flex: 1; 
+            background: none; 
+            border: none; 
+            padding: 12px; 
+            color: var(--text-light); 
+            font-size: 14px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            border-radius: 6px; 
+            transition: all 0.3s ease; 
+        }
+        .doc-selector button:hover {
+            background-color: #e2e8f0;
+        }
+        .doc-selector button.active { 
+            background-color: var(--current-accent); 
+            color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .search-container { 
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 10px; 
+            background-color: #f8fafc; 
+            padding: 10px; 
+            border-radius: 8px; 
+            border: 1px solid #e2e8f0; 
+        }
+        #searchInput { 
+            flex-grow: 1; 
+            padding: 10px 15px; 
+            border: 1px solid #cbd5e1; 
+            border-radius: 6px; 
+            font-size: 14px; 
+            outline: none; 
+            transition: border-color 0.3s;
+        }
+        #searchInput:focus {
+            border-color: var(--current-accent);
+        }
+        #searchBtn { 
+            background-color: var(--text-main); 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: background 0.3s;
+        }
+        #searchBtn:hover {
+            background-color: #1e293b;
+        }
+        #searchResult { 
+            font-size: 13px; 
+            color: var(--text-light); 
+            margin-top: 5px; 
+            display: none; 
+            padding: 10px; 
+            background-color: #f1f5f9; 
+            border-radius: 6px; 
+            border-left: 3px solid var(--current-accent);
+        }
+
+        /* =========================================
+           NAVEGACIÓN DE CAPÍTULOS
+           ========================================= */
+        .nav-links { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 5px; 
+            margin-bottom: 30px; 
+            border-bottom: 1px solid #e2e8f0; 
+            padding-bottom: 10px; 
+        }
+        .nav-links button { 
+            background: none; 
+            border: none; 
+            padding: 8px 15px; 
+            font-size: 13px; 
+            color: var(--text-light); 
+            cursor: pointer; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            border-bottom: 3px solid transparent; 
+            transition: all 0.3s; 
+        }
+        .nav-links button:hover { color: var(--text-main); }
+        .nav-links button.active { 
+            color: var(--current-accent); 
+            border-bottom: 3px solid var(--current-accent); 
+        }
+
+        /* =========================================
+           CONTENIDO DINÁMICO
+           ========================================= */
+        .doc-section { display: none; }
+        .doc-section.active { display: block; }
+        
+        .tab-content { 
+            display: none; 
+            animation: fadeIn 0.4s; 
+            max-width: 100%; 
+        }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* =========================================
+           TIPOGRAFÍA Y ELEMENTOS
+           ========================================= */
+        .subtitle { 
+            font-size: 12px; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            color: var(--current-accent); 
+            margin-bottom: 10px; 
+            display: block; 
+            font-weight: 700; 
+        }
+        h1 { font-size: 34px; font-weight: 300; margin: 0 0 25px 0; color: var(--text-main); }
+        h2 { 
+            font-size: 22px; 
+            font-weight: 600; 
+            color: var(--text-main); 
+            margin-top: 35px; 
+            margin-bottom: 15px; 
+            border-left: 4px solid var(--current-accent); 
+            padding-left: 15px; 
+        }
+        h3 { font-size: 17px; font-weight: 700; color: var(--text-main); margin-top: 25px; margin-bottom: 10px; }
+        p, ul { font-size: 15px; line-height: 1.7; color: #475569; margin-bottom: 15px; text-align: justify; }
+        li { margin-bottom: 8px; }
+        strong { color: var(--text-main); }
+
+        .formula { 
+            background-color: #f8fafc; 
+            padding: 15px; 
+            border-left: 4px solid var(--current-accent); 
+            margin: 20px 0; 
+            font-family: 'Courier New', monospace; 
+            font-size: 16px; 
+            text-align: center; 
+            overflow-x: auto; 
+            color: var(--text-main); 
+            border-radius: 0 6px 6px 0; 
+        }
+        
+        /* =========================================
+           ESTILOS PARA LAS IMÁGENES
+           ========================================= */
+        .image-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 15px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .image-caption {
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--text-light);
+            font-style: italic;
+        }
+        .image-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 150px;
+            background-color: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            color: #94a3b8;
+            font-size: 14px;
+            margin: 20px 0;
+        }
+        .image-placeholder strong {
+            color: var(--text-main);
+            margin-bottom: 5px;
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 25px 0; 
+            font-size: 14px; 
+            background-color: #fff; 
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        th, td { 
+            text-align: left; 
+            padding: 12px 15px; 
+            border-bottom: 1px solid #e2e8f0; 
+        }
+        th { 
+            font-weight: 600; 
+            color: var(--text-main); 
+            background-color: #f8fafc; 
+            border-bottom: 2px solid var(--current-accent); 
+        }
+        tr:hover { background-color: #f8fafc; }
+        
+        /* =========================================
+           ESTILO DE LAS PALABRAS CLAVE (AMARILLO PÁLIDO, CURSIVA)
+           ========================================= */
+        .searchable { 
+            background-color: #fefce8; 
+            color: #475569; 
+            font-style: italic; 
+            padding: 0 2px; 
+            border-radius: 2px; 
+            cursor: help;
+            transition: background 0.2s, color 0.2s;
+        }
+        .searchable:hover {
+            background-color: #fef08a; 
+            color: #1e293b;
+            text-decoration: underline dotted #cbd5e1;
+        }
+
+        .theme-us { --current-accent: var(--us-color); }
+        .theme-vent { --current-accent: var(--vent-color); }
+
+        /* =========================================
+           ESTILOS DEL POP-UP (PREVISUALIZACIÓN)
+           ========================================= */
+        #previewPopup {
+            display: none; 
+            position: absolute;
+            z-index: 1000; 
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 320px;
+            overflow: hidden;
+            text-align: center;
+            padding-bottom: 10px;
+        }
+        #previewHeader {
+            background-color: var(--current-accent);
+            color: white;
+            padding: 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        #previewContent {
+            min-height: 120px;
+            max-height: 250px; 
+            overflow-y: auto; 
+            width: 100%;
+            background-color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #previewContent img {
+            max-width: 100%;
+            max-height: 120px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        #previewDefinition {
+            font-size: 13px;
+            color: var(--text-main);
+            line-height: 1.5;
+            text-align: left;
+            padding: 0 10px;
+        }
+        .popup-actions {
+            padding: 10px 10px 0 10px;
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="container theme-us" id="mainContainer">
+            <!-- PORTADA Y ENCABEZADO -->
+            <header>
+                <div class="portada">
+                    <h1>Página de Apuntes sobre Equipos Biomédicos</h1>
+                    <h2>Bioinstrumentación III</h2>
+                    <p class="autor">Elaborado por: Delgado Yáñez Oswaldo</p>
+                    <p class="creditos">Con apoyo de Deepseek como herramienta de desarrollo de página web</p>
+                </div>
+                
+                <div class="doc-selector">
+                    <button class="active" onclick="switchDoc(event, 'doc-us')">Ultrasonido</button>
+                    <button onclick="switchDoc(event, 'doc-vent')">Ventilación Pulmonar</button>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Busca un término técnico..." onkeypress="handleKeyPress(event)">
+                    <button id="searchBtn" onclick="buscarPalabra()">Buscar</button>
+                </div>
+                <div id="searchResult">Resultado de búsqueda...</div>
+            </header>
+
+            <!-- CONTENEDORES -->
+            <div id="doc-us" class="doc-section active">
+                <div class="nav-links" id="menu-us"></div>
+                <div id="content-us"></div>
+            </div>
+
+            <div id="doc-vent" class="doc-section">
+                <div class="nav-links" id="menu-vent"></div>
+                <div id="content-vent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- POP-UP DE PREVISUALIZACIÓN (CON DEFINICIÓN INTERNA) -->
+    <div id="previewPopup">
+        <div id="previewHeader">Cargando...</div>
+        <div id="previewContent">
+            <img id="previewImg" src="" style="display:none;" alt="Previsualización">
+            <div id="previewDefinition">Buscando definición...</div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        const docsData = {
+            "doc-us": {
+                menuId: "menu-us", contentId: "content-us", prefix: "us",
+                chapters: [
+                    {
+                        id: "us-cap1", title: "Cap 1: Física",
+                        content: `
+                            <span class="subtitle">Ultrasonido - Capítulo 1</span>
+                            <h1>Física del Ultrasonido en Tejido</h1>
+                            
+                            <h2>1.1 Onda, frecuencia y longitud de onda</h2>
+                            <p>El ultrasonido diagnóstico utiliza frecuencias de 1 a 40 MHz. En los tejidos blandos, la <span class="searchable">onda</span> es <span class="searchable">longitudinal</span>: las partículas oscilan en la dirección de propagación, con <span class="searchable">compresiones</span> y <span class="searchable">rarefacciones</span>. La <span class="searchable">velocidad</span> depende del medio, no de la frecuencia. La fórmula fundamental que rige esto es <strong>\\( c = f \\cdot \\lambda \\)</strong>, donde la velocidad del sonido (\\(c\\)) se asume constante en 1540 m/s.</p>
+                            <p>La longitud de onda (\\(\\lambda\\)) es la regla con la que se mide casi todo: la <span class="searchable">resolución</span>, la apertura del haz y el espesor de los materiales piezoeléctricos. Prácticamente: \\(\\lambda (\\text{mm}) = 1.54 / f (\\text{MHz})\\). A 5 MHz, \\(\\lambda = 0.31\\) mm; a 10 MHz, \\(\\lambda = 0.154\\) mm. A mayor <span class="searchable">frecuencia</span>, menor longitud de onda (y mejor resolución).</p>
+                            
+                            <div class="image-container">
+                                <img src="us_cap1_fig1.png" alt="Pérdida de ida y vuelta" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap1_fig1.png</strong>Falta esta imagen (Pérdida de ida y vuelta)</div>'">
+                                <div class="image-caption">Figura 1. Pérdida de ida y vuelta contra profundidad.</div>
+                            </div>
+
+                            <h3>Tabla 1: Valores típicos de velocidad e impedancia acústica</h3>
+                            <table>
+                                <tr><th>Medio</th><th>c (m/s)</th><th>Z (MRayl)</th></tr>
+                                <tr><td>Aire</td><td>343</td><td>0.0004</td></tr>
+                                <tr><td>Grasa</td><td>1450</td><td>1.38</td></tr>
+                                <tr><td>Agua</td><td>1480</td><td>1.48</td></tr>
+                                <tr><td>Hígado</td><td>1550</td><td>1.65</td></tr>
+                                <tr><td>Músculo</td><td>1580</td><td>1.70</td></tr>
+                                <tr><td>Hueso cortical</td><td>4080</td><td>7.8</td></tr>
+                                <tr><td>Cerámica PZT</td><td>≈4000</td><td>≈33</td></tr>
+                            </table>
+
+                            <h2>1.2 Impedancia, reflexión y transmisión</h2>
+                            <p>La <span class="searchable">impedancia</span> acústica (\\(Z = \\rho \\cdot c\\)) caracteriza cada medio. Cuando la onda llega a una frontera entre dos medios con \\(Z_1\\) y \\(Z_2\\), parte de la intensidad se refleja y el resto se transmite. Para incidencia perpendicular:</p>
+                            <div class="formula">\\( R = \\left( \\frac{Z_2 - Z_1}{Z_2 + Z_1} \\right)^2 \\quad ; \\quad T = 1 - R \\)</div>
+                            <p>El eco es la parte reflejada, así que la imagen es un mapa de cambios de impedancia. Tres casos explican casi todo lo que se ve:</p>
+                            <ul>
+                                <li><strong>Entre tejidos blandos:</strong> R ≈ 1%. La mayor parte del haz pasa y se ven estructuras profundas.</li>
+                                <li><strong>Entre tejido y hueso:</strong> R ≈ 40%. La energía transmitida se absorbe y aparece una <strong>sombra acústica</strong> detrás del hueso.</li>
+                                <li><strong>Entre tejido y aire:</strong> R > 99.9%. Casi nada pasa. Por eso se usa <strong>gel</strong> y por eso el aire del pulmón normal impide ver su interior.</li>
+                            </ul>
+                            <p>Si el haz no incide de forma perpendicular, el eco se desvía (Ley de <span class="searchable">Snell</span>). Los reflectores muy pequeños (del tamaño de \\(\\lambda\\) o menor) <strong>dispersan</strong> la onda en todas direcciones: de ahí sale el patrón granulado (moteado o <em><span class="searchable">speckle</span></em>) de los órganos sólidos.</p>
+
+                            <h2>1.3 Atenuación y penetración</h2>
+                            <p>Al propagarse, la onda pierde intensidad por absorción (conversión a calor), dispersión y reflexión. En tejido blando la pérdida crece de forma lineal con la distancia y la frecuencia:</p>
+                            <div class="formula">\\( A(\\text{dB}) = \\alpha \\cdot f \\cdot d_{\\text{recorrida}} \\quad \\text{con } \\alpha \\approx 0.5 \\text{ dB/(cm}\\cdot\\text{MHz)} \\)</div>
+                            <p>Como el eco hace el viaje de ida y vuelta, la distancia recorrida es \\(2d\\), y la pérdida para un reflector a profundidad \\(d\\) es \\(A_{\\text{ida-vuelta}} = 2 \\alpha f d\\). Los equipos pueden mostrar un intervalo de amplitudes de unos 60 a 100 dB. Tomando 80 dB como cifra de trabajo, la <strong><span class="searchable">penetración</span> máxima</strong> es \\(d_{max} \\approx 80/f\\) cm (con \\(f\\) en MHz).</p>
+                            <p><strong>Ejemplo:</strong> Un reflector a 10 cm explorado con 3.5 MHz pierde \\(2(0.5)(3.5)(10) = 35\\) dB. Con 7.5 MHz la pérdida sería 75 dB, casi todo el intervalo dinámico: para esa profundidad conviene un transductor de baja frecuencia aunque pierda resolución.</p>
+
+                            <h2>1.4 Relación tiempo-profundidad</h2>
+                            <p>El equipo mide el tiempo entre el pulso transmitido y el eco, y calcula la profundidad con el valor supuesto de \\(c\\):</p>
+                            <div class="formula">\\( d = \\frac{c \\cdot t}{2} \\quad \\Leftrightarrow \\quad t = 13 \\, \\mu s \\text{ por cada cm de profundidad} \\)</div>
+                            <p>Si la velocidad real del tejido difiere de 1540 m/s (en grasa, \\(c\\) es 6% menor), la profundidad medida tiene un error pequeño (los objetos se ven un poco más profundos de lo que están).</p>
+                        `
+                    },
+                    {
+                        id: "us-cap2", title: "Cap 2: Transductores",
+                        content: `
+                            <span class="subtitle">Ultrasonido - Capítulo 2</span>
+                            <h1>Transductores y Haces</h1>
+                            <h2>2.1 Piezoelectricidad</h2>
+                            <p>Un material <span class="searchable">piezoeléctrico</span> se deforma al aplicarle voltaje y genera voltaje al deformarse. El elemento <span class="searchable">transductor</span> es una lámina de cerámica (típicamente <span class="searchable">PZT</span>) con electrodos. La vibración es máxima cuando el espesor es media longitud de onda dentro del material: \\( t = \\lambda_{PZT}/2 \\).</p>
+                            <p>El <strong>respaldo</strong> absorbe la vibración hacia atrás y acorta el pulso, lo que mejora la resolución axial a costa de sensibilidad. La <strong>capa de acoplamiento</strong>, de espesor λ/4 e impedancia intermedia (\\(Z_m \\approx \\sqrt{Z_{PZT} Z_{tejido}}\\)), reduce la enorme diferencia de impedancia entre la cerámica (≈33 MRayl) y el tejido (≈1.6 MRayl) y permite que pase más energía. La <strong>lente</strong> concentra el haz en el plano perpendicular a la imagen (foco elevacional).</p>
+                            <p>El <strong>ancho de banda</strong> del transductor, la gama de frecuencias que emite y recibe bien, es mayor cuanto más corto es el pulso; hoy muchas <span class="searchable">sondas</span> son de banda ancha y permiten cambiar de frecuencia dentro de un intervalo.</p>
+
+                            <div class="image-container">
+                                <img src="us_cap2_fig1.png" alt="Capas de un transductor" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap2_fig1.png</strong>Falta esta imagen (Capas de un transductor)</div>'">
+                                <div class="image-caption">Figura 1. Capas de un transductor.</div>
+                            </div>
+
+                            <h2>2.2 Tipos de sonda</h2>
+                            <table>
+                                <tr><th>Tipo</th><th>Elementos y forma del campo</th><th>Frecuencias</th><th>Usos</th></tr>
+                                <tr><td><span class="searchable">Lineal</span></td><td>Muchos elementos en fila; campo rectangular</td><td>5-15 MHz</td><td>Vasos, tiroides, mama, pleura</td></tr>
+                                <tr><td><span class="searchable">Convexa</span></td><td>Fila curva; campo en abanico</td><td>2-6 MHz</td><td>Abdomen, obstetricia, pulmón</td></tr>
+                                <tr><td><span class="searchable">Sectorial</span></td><td>Pocos elementos, haz desviado electrónicamente</td><td>1-5 MHz</td><td>Corazón, tórax</td></tr>
+                            </table>
+
+                            <div class="image-container">
+                                <img src="us_cap2_fig2.png" alt="Haz sin foco y con foco" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap2_fig2.png</strong>Falta esta imagen (Haz sin foco y con foco)</div>'">
+                                <div class="image-caption">Figura 2. Haz sin foco (campo cercano N) y con foco a 3 cm.</div>
+                            </div>
+
+                            <h2>2.3 Campo cercano, lejano y enfoque</h2>
+                            <p>Un transductor de apertura \\(D\\) emite un haz que primero se mantiene estrecho y luego diverge. La zona estrecha es el <strong>campo cercano</strong> (zona de <span class="searchable">Fresnel</span>) y mide <strong>\\( N = D^2 / 4\\lambda \\)</strong>. Más allá de \\(N\\) el haz diverge con un ángulo \\(\\sin\\varphi \\approx 1.22 \\lambda/D\\) (campo lejano). Con enfoque (lente o retardos) el haz se estrecha en una zona focal, a costa de divergir más allá de ella. El ancho lateral del haz en el foco es del orden de \\( \\Delta x \\approx \\lambda F / D \\).</p>
+
+                            <h2>2.4 Resolución</h2>
+                            <p>La <span class="searchable">resolución axial</span> (a lo largo del haz) depende de la longitud del pulso: <strong>\\( \\Delta z = SPL/2 = n\\lambda/2 \\)</strong>. La <span class="searchable">resolución lateral</span> la fija el ancho del haz (es peor en el campo lejano). La resolución en elevación depende del grosor del corte. En resumen, la resolución es mejor a frecuencias más altas, por eso se elige la frecuencia más alta que todavía alcance la profundidad requerida.</p>
+                        `
+                    },
+                    {
+                        id: "us-cap3", title: "Cap 3: Imagen",
+                        content: `
+                            <span class="subtitle">Ultrasonido - Capítulo 3</span>
+                            <h1>Formación de Imagen</h1>
+                            <h2>3.1 Pulso-eco y modos de presentación</h2>
+                            <p>El equipo envía un pulso corto, espera los ecos y registra la amplitud contra el tiempo (Modo A). Se repite a una frecuencia de repetición de pulsos (<span class="searchable">PRF</span>) limitada por el tiempo que tarda el eco en volver: \\( PRF_{max} = c / 2d_{max} \\). Un pulso nuevo antes de que llegue el eco más profundo produce ecos ambiguos.</p>
+                            <ul>
+                                <li><strong>Modo A:</strong> Amplitud contra profundidad en una línea (oftalmología).</li>
+                                <li><strong>Modo B:</strong> Imagen 2D en escala de grises (brillo = amplitud del eco).</li>
+                                <li><strong>Modo M:</strong> Una línea de B repetida en el tiempo (movimiento de válvulas, pleura, diafragma).</li>
+                            </ul>
+
+                            <h2>3.2 Imagen B y cuadros por segundo</h2>
+                            <p>Una imagen B se forma con \\(N_t\\) líneas. Despreciando tiempos muertos, el tiempo de línea es \\(2d/c\\) y la tasa de cuadros es <strong>\\( FR = c / (2d N_t) \\)</strong>. Si se usan dos zonas focales en transmisión, cada línea se transmite dos veces y el FR baja a la mitad: <strong>resolución y velocidad compiten</strong>.</p>
+
+                            <h2>3.3 Procesamiento de la señal</h2>
+                            <p>La cadena típica es: excitación del arreglo → amplificación de bajo ruido y ganancia variable en el tiempo (<span class="searchable">TGC</span>) → conversión analógica a digital (<span class="searchable">ADC</span>) → formación de haz en recepción → detección de envolvente → compresión logarítmica → corrección de escaneo → pantalla.</p>
+                            <p>Los controles que ve el usuario son:</p>
+                            <ul>
+                                <li><strong>Ganancia general y TGC:</strong> Compensan la atenuación \\(2\\alpha f d\\). Sin ella los reflectores idénticos más profundos se ven más débiles.</li>
+                                <li><strong>Compresión (rango dinámico):</strong> Reduce los más de 60 dB de los ecos al intervalo de grises que el ojo distingue (~30 a 40 dB).</li>
+                                <li><strong>Armónicos tisulares:</strong> Se transmite a \\(f_0\\) y se recibe a \\(2f_0\\), que se genera por la propagación no lineal en el tejido. Mejora el contraste.</li>
+                                <li><strong>Compuesto espacial:</strong> Promedia vistas desde varios ángulos; mejora la imagen, pero puede borrar artefactos útiles (como las líneas B).</li>
+                            </ul>
+
+                            <div class="image-container">
+                                <img src="us_cap3_fig1.png" alt="TGC" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap3_fig1.png</strong>Falta esta imagen (Cinco reflectores idénticos / TGC)</div>'">
+                                <div class="image-caption">Figura 1. Cinco reflectores idénticos y la aplicación de TGC.</div>
+                            </div>
+
+                            <h2>3.4 Artefactos</h2>
+                            <p>Un <span class="searchable">artefacto</span> es una imagen que no corresponde a la anatomía real porque el equipo supone cosas que no siempre se cumplen. Los más importantes:</p>
+                            <ul>
+                                <li><strong>Sombra acústica:</strong> Zona oscura detrás de un fuerte reflector (hueso, cálculo, aire).</li>
+                                <li><strong>Refuerzo posterior:</strong> Zona brillante detrás de estructuras con poca atenuación (quistes con líquido).</li>
+                                <li><strong>Reverberación:</strong> Ecos que rebotan varias veces entre dos superficies fuertes. Son la base de las líneas A del pulmón.</li>
+                                <li><strong>Cola de cometa / línea B:</strong> Reverberación breve vertical brillante.</li>
+                                <li><strong>Imagen en espejo:</strong> Un reflector fuerte (diafragma, pleura) hace aparecer una copia del tejido "más allá" de él.</li>
+                            </ul>
+                        `
+                    },
+                    {
+                        id: "us-cap4", title: "Cap 4: Doppler",
+                        content: `
+                            <span class="subtitle">Ultrasonido - Capítulo 4</span>
+                            <h1>Doppler</h1>
+                            <h2>4.1 Efecto Doppler y velocidad del flujo</h2>
+                            <p>Cuando los <span class="searchable">eritrocitos</span> se mueven respecto del transductor, la frecuencia del eco cambia. El corrimiento de frecuencia depende de la componente de la velocidad en la dirección del haz:</p>
+                            <div class="formula">\\( f_d = \\frac{2 f_0 v \\cos\\theta}{c} \\quad \\Rightarrow \\quad v = \\frac{f_d c}{2 f_0 \\cos\\theta} \\)</div>
+                            <p>El <span class="searchable">ángulo crítico</span> \\(\\theta\\) es crítico: la estimación de \\(v\\) depende del ángulo asumido, y los ángulos cercanos a 90° son inútiles (cos 90° = 0). Se recomienda \\(\\theta \\le 60°\\), porque cerca de ese valor una pequeña desviación produce un error grande. <strong>Ejemplo:</strong> Si se asume 60° pero el ángulo real es 70°, la velocidad calculada es 0.68 de la real: subestima un 32%.</p>
+
+                            <h2>4.2 Doppler continuo, pulsado y color</h2>
+                            <ul>
+                                <li><strong>Continuo (CW):</strong> Usa dos grupos de elementos, uno que transmite y otro que recibe sin interrupción. Mide velocidades muy altas, pero no sabe a qué profundidad ocurren.</li>
+                                <li><strong>Pulsado (PW):</strong> Transmite pulsos y escucha a una profundidad elegida con una compuerta. Localiza la velocidad en un punto, pero queda limitado por la PRF.</li>
+                                <li><strong>Color:</strong> Muestra en la imagen B la velocidad media y la dirección del flujo (rojo hacia el transductor, azul alejándose).</li>
+                                <li><strong>Potencia:</strong> Muestra la presencia de flujo sin dirección, con más sensibilidad a flujos lentos.</li>
+                            </ul>
+
+                            <h2>4.3 Aliasing y límite de Nyquist</h2>
+                            <p>El Doppler pulsado muestra el corrimiento una vez por pulso, así que solo puede medir frecuencias hasta la mitad de la PRF (<span class="searchable">límite de Nyquist</span>): <strong>\\( |f_d|_{max} = PRF/2 \\)</strong>. Si \\(f_d\\) excede ese límite, el espectro se "pliega" (<span class="searchable">aliasing</span>).</p>
+                            <p>Hay una limitación adicional: la PRF máxima la fija la profundidad (PRF \\(\\le c/2d\\)), de modo que <strong>no se pueden medir velocidades altas a gran profundidad con Doppler pulsado</strong>. Las soluciones prácticas son: subir la PRF, bajar la frecuencia del transductor, desplazar la línea de base, aumentar el ángulo (con cautela) o usar CW.</p>
+                            
+                            <div class="image-container">
+                                <img src="us_cap4_fig1.png" alt="Espectro Doppler" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap4_fig1.png</strong>Falta esta imagen (Espectro Doppler sin/con aliasing)</div>'">
+                                <div class="image-caption">Figura 1. Espectro Doppler sin aliasing y con aliasing.</div>
+                            </div>
+                        `
+                    },
+                    {
+                        id: "us-cap5", title: "Cap 5: Seguridad",
+                        content: `
+                            <span class="subtitle">Ultrasonido - Capítulo 5</span>
+                            <h1>Seguridad y Normativa</h1>
+                            <h2>5.1 Bioefectos y sus índices</h2>
+                            <p>El ultrasonido a las intensidades diagnósticas se considera seguro con un uso prudente, pero la energía acústica puede producir dos tipos de efectos, y los equipos muestran un índice para cada uno:</p>
+                            <ul>
+                                <li><strong>Efecto térmico:</strong> El tejido absorbe energía y se calienta. El <strong>índice térmico (TI)</strong> es la razón entre la potencia emitida y la necesaria para elevar 1 °C. Se reporta como TIS (tejido blando), TIB (hueso) y TIC (craneal).</li>
+                                <li><strong>Efecto mecánico (<span class="searchable">cavitación</span>):</strong> Una presión de rarefacción alta puede hacer oscilar o colapsar microburbujas. El <strong>índice mecánico (MI)</strong> se calcula con la presión pico de rarefacción atenuada y la frecuencia: \\( MI = p_{r.3} / \\sqrt{f_c} \\).</li>
+                            </ul>
+                            <p>La práctica clínica se resume en el principio <strong>ALARA</strong> (As Low As Reasonably Achievable): usar la mínima energía y el menor tiempo de exploración que den el diagnóstico. El Doppler deposita más energía que el modo B.</p>
+
+                            <h2>5.2 Límites regulatorios y requisitos</h2>
+                            <p>En Estados Unidos (E.E.U.U.), la FDA establece límites: \\(I_{SPTA.3} \\le 720 \\text{ mW/cm}^2\\) y \\(MI \\le 1.9\\), y exige mostrar MI y TI cuando el equipo puede superar 1.0. La norma internacional es la <strong>IEC 60601-1-2</strong> (compatibilidad electromagnética) y la <strong>IEC 60601-2-37</strong>. En México se requiere registro sanitario (COFEPRIS) y tecnovigilancia (NOM-240-SSA1-2012). La seguridad eléctrica recurrente se verifica con la <strong>IEC 62353</strong>.</p>
+
+                            <h2>5.3 Seguridad en el uso y mantenimiento</h2>
+                            <ul>
+                                <li><strong>Limpieza:</strong> Bajo nivel (piel íntegra), alto nivel (mucosas) o estéril (procedimientos).</li>
+                                <li><strong>Eléctrica:</strong> Transductores tipo BF. Verificar corriente de fuga tras reparaciones.</li>
+                                <li><strong>Control de calidad:</strong> Uso de <span class="searchable">fantomas</span> para verificar distancia, resoluciones, zona muerta y penetración.</li>
+                                <li><strong>Ciberseguridad:</strong> Control de acceso y cifrado en equipos que exportan DICOM o se conectan a redes.</li>
+                            </ul>
+                        `
+                    },
+                    {
+                        id: "us-cap6", title: "Cap 6: Pulmón",
+                        content: `
+                            <span class="subtitle">Ultrasonido - Capítulo 6</span>
+                            <h1>Ultrasonido Pulmonar y Diafragma</h1>
+                            <h2>6.1 ¿Por qué se puede ver el pulmón si el aire lo impide?</h2>
+                            <p>El pulmón normal está lleno de aire y la interfase tejido-aire refleja más del 99.9% de la intensidad: no hay "ventana acústica" hacia el interior. Lo que se ve son la <span class="searchable">pleura</span> y los artefactos que genera el aire. Las enfermedades que reducen el aire o aumentan el líquido cambian esos artefactos. El ultrasonido pulmonar es una herramienta de reconocimiento de patrones, útil y repetible a la cabecera del paciente.</p>
+
+                            <div class="image-container">
+                                <img src="us_cap6_fig1.png" alt="Atlas sintético" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap6_fig1.png</strong>Falta esta imagen (Atlas sintético: pulmón normal, intersticial, consolidación)</div>'">
+                                <div class="image-caption">Figura 1. Atlas sintético de pulmón normal, síndrome intersticial y consolidación.</div>
+                            </div>
+
+                            <h2>6.2 Técnica y protocolos</h2>
+                            <p>Se usa sonda convexa (2-5 MHz) para ver hasta 12-15 cm, o lineal (7-12 MHz) para detalle de la pleura. Se exploran 8 o 12 zonas (anteriores, laterales y posteriores de cada hemitórax). El <strong>protocolo BLUE</strong> organiza los hallazgos para la insuficiencia respiratoria aguda. Se suelen plantear preguntas clínicas dirigidas antes de la exploración.</p>
+
+                            <h2>6.3 Signos y su origen físico</h2>
+                            <table>
+                                <tr><th>Signo</th><th>Qué se ve</th><th>Origen físico</th><th>Significado habitual</th></tr>
+                                <tr><td>Línea pleural</td><td>Línea horizontal brillante</td><td>Interfase tejido-aire</td><td>Referencia</td></tr>
+                                <tr><td>Deslizamiento</td><td>Brillo que "baila"</td><td>Movimiento de pleuras</td><td>Descarta neumotórax</td></tr>
+                                <tr><td>Líneas A</td><td>Líneas horizontales repetidas</td><td>Reverberación a múltiplos</td><td>Pulmón aireado</td></tr>
+                                <tr><td>Líneas B</td><td>Líneas verticales brillantes</td><td>Reverberación en líquido</td><td>Patrón intersticial (edema)</td></tr>
+                                <tr><td>Consolidación</td><td>Aspecto tisular (como hígado)</td><td>Pulmón sin aire</td><td>Neumonía, atelectasia</td></tr>
+                                <tr><td>Derrame</td><td>Espacio anecoico</td><td>Líquido sin dispersores</td><td>Derrame pleural</td></tr>
+                            </table>
+
+                            <h2>6.4 Limitaciones y diafragma</h2>
+                            <p>La ausencia de deslizamiento no equivale a neumotórax (también en apnea o adherencias). Las líneas B pueden verse aisladas en pulmones normales. El <span class="searchable">diafragma</span> se evalúa con la <strong>fracción de engrosamiento (TF)</strong>: \\( TF = (T_{ei} - T_{ee}) / T_{ee} \\). Valores de 30-36% se asocian con éxito en la desconexión del ventilador.</p>
+                        `
+                    },
+                    {
+                        id: "us-cap7", title: "Cap 7: Equipos",
+                        content: `
+                            <span class="subtitle">Ultrasonido - Capítulo 7</span>
+                            <h1>Equipos Comerciales y Ciclo de Vida</h1>
+                            <h2>7.1 Categorías</h2>
+                            <p><strong>De carro:</strong> Sistemas de alto desempeño, múltiples sondas, Doppler continuo. <strong>Portátiles:</strong> Tipo laptop, compromiso entre desempeño y tamaño. <strong>De mano:</strong> Electrónica integrada que se conecta a un teléfono o tablet (<span class="searchable">POCUS</span>).</p>
+
+                            <h2>7.2 Comparativa de equipos de mano</h2>
+                            <table>
+                                <tr><th>Característica</th><th>Butterfly iQ3</th><th>GE Vscan Air SL</th></tr>
+                                <tr><td>Sonda</td><td>1 (CMUT, lineal/convexa/fase)</td><td>2 (Sectorial y Lineal)</td></tr>
+                                <tr><td>Frecuencia</td><td>1-12 MHz</td><td>Sectorial 1.6-3.7; Lineal 3-12 MHz</td></tr>
+                                <tr><td>Profundidad</td><td>Pulmón 15 cm; Abdomen 25-30 cm</td><td>Sectorial hasta 24 cm; Lineal hasta 8 cm</td></tr>
+                                <tr><td>Batería</td><td>Hasta 2 h</td><td>50 min de exploración</td></tr>
+                                <tr><td>Protección</td><td>IPX7</td><td>IP67</td></tr>
+                                <tr><td>MI/TI</td><td>No listado</td><td>No listado</td></tr>
+                            </table>
+
+                            <h2>7.3 Ciclo de vida hospitalario</h2>
+                            <ol>
+                                <li><strong>Selección:</strong> Basada en necesidad clínica y costo total de propiedad.</li>
+                                <li><strong>Aceptación:</strong> Verificación de funciones y prueba con fantoma (línea base).</li>
+                                <li><strong>Capacitación:</strong> La calidad depende del operador.</li>
+                                <li><strong>Uso:</strong> Control de infecciones y limpieza entre pacientes.</li>
+                                <li><strong>Mantenimiento:</strong> Inspección de lente/cable, actualización de software y gestión de baterías.</li>
+                                <li><strong>Baja:</strong> Tecnovigilancia y disposición final de baterías.</li>
+                            </ol>
+                        `
+                    },
+                    {
+                        id: "us-anexos", title: "Anexos",
+                        content: `
+                            <span class="subtitle">Ultrasonido - Anexos</span>
+                            <h1>Formulario y Glosario</h1>
+                            <p><strong>SPL:</strong> Longitud espacial del pulso. <strong>PRF:</strong> Frecuencia de repetición de pulsos. <strong>TGC:</strong> Ganancia por profundidad. <strong>ALARA:</strong> Mínima energía.</p>
+                            
+                            <div class="image-container">
+                                <img src="us_anexo_fig1.png" alt="Reflexión y refracción" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_anexo_fig1.png</strong>Falta esta imagen (Reflexión y refracción)</div>'">
+                                <div class="image-caption">Figura A1. Reflexión y refracción en una frontera.</div>
+                            </div>
+                            <div class="image-container">
+                                <img src="us_anexo_fig2.png" alt="Tren de pulsos" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_anexo_fig2.png</strong>Falta esta imagen (Tren de pulsos)</div>'">
+                                <div class="image-caption">Figura A2. Parámetros temporales del pulso en el modo B.</div>
+                            </div>
+
+                            <h3>Formulario Clave</h3>
+                            <table>
+                                <tr><th>Magnitud</th><th>Expresión</th></tr>
+                                <tr><td>Longitud de onda</td><td>λ (mm) = 1.54 / f (MHz)</td></tr>
+                                <tr><td>Impedancia</td><td>Z = ρc</td></tr>
+                                <tr><td>Reflexión</td><td>R = ((Z₂-Z₁)/(Z₂+Z₁))²</td></tr>
+                                <tr><td>Atenuación ida-vuelta</td><td>A = 2 α f d</td></tr>
+                                <tr><td>Penetración máxima</td><td>dmax ≈ 80/f</td></tr>
+                                <tr><td>Campo cercano</td><td>N = D² / (4λ)</td></tr>
+                                <tr><td>Resolución lateral</td><td>Δx ≈ λF/D</td></tr>
+                                <tr><td>Resolución axial</td><td>Δz = nλ/2</td></tr>
+                                <tr><td>PRF máxima</td><td>PRFmax = c / (2dmax)</td></tr>
+                                <tr><td>Corrimiento Doppler</td><td>fd = 2f₀vcosθ/c</td></tr>
+                                <tr><td>Aliasing (v máx)</td><td>vmax = c·PRF / (4f₀cosθ)</td></tr>
+                            </table>
+                        `
+                    }
+                ]
+            },
+            "doc-vent": {
+                menuId: "menu-vent", contentId: "content-vent", prefix: "vent",
+                chapters: [
+                    {
+                        id: "vent-cap1", title: "Cap 1: Fisiología",
+                        content: `
+                            <span class="subtitle">Ventilación - Capítulo 1</span>
+                            <h1>Fisiología y Mecánica Respiratoria</h1>
+                            <h2>1.1 Vía aérea, alvéolos y espacio muerto</h2>
+                            <p>El aire recorre la zona de conducción (nariz, faringe, laringe, tráquea y bronquios, hasta 16 generaciones) y llega a la zona respiratoria (bronquiolos respiratorios, conductos y sacos alveolares), donde ocurre el intercambio gaseoso. El volumen de la zona de conducción no intercambia gases y se llama <strong>espacio muerto anatómico</strong>; en un adulto sano ronda los 150 mL (aproximadamente 2.2 mL por kg de peso ideal).</p>
+                            <p>Si hay <span class="searchable">alvéolos</span> ventilados pero no perfundidos, se suma el <strong>espacio muerto alveolar</strong>; la suma de ambos es el <strong>espacio muerto fisiológico</strong>. En un paciente intubado, el tubo, el conector y los sensores del circuito agregan <strong>espacio muerto instrumental</strong>.</p>
+
+                            <h2>1.2 Volúmenes y capacidades pulmonares</h2>
+                            <p>Los volúmenes se miden con espirometría; las capacidades son sumas de volúmenes. El <strong>volumen residual (VR)</strong> no puede medirse con un espirómetro simple.</p>
+                            <table>
+                                <tr><th>Magnitud</th><th>Definición</th><th>Valor típico adulto (L)</th></tr>
+                                <tr><td>VT, volumen corriente</td><td>Aire que entra y sale en cada respiración tranquila</td><td>0.5</td></tr>
+                                <tr><td>VRI, volumen de reserva inspiratoria</td><td>Máximo adicional que se inspira tras una inspiración normal</td><td>3.0</td></tr>
+                                <tr><td>VRE, volumen de reserva espiratoria</td><td>Máximo adicional que se espira tras una espiración normal</td><td>1.1</td></tr>
+                                <tr><td>VR, volumen residual</td><td>Aire que permanece tras una espiración máxima</td><td>1.2</td></tr>
+                                <tr><td>CV, capacidad vital</td><td>VRI + VT + VRE</td><td>4.6</td></tr>
+                                <tr><td>CRF, capacidad residual funcional</td><td>VRE + VR (reposo respiratorio)</td><td>2.3</td></tr>
+                                <tr><td>CPT, capacidad pulmonar total</td><td>CV + VR</td><td>5.8</td></tr>
+                            </table>
+
+                            <div class="image-container">
+                                <img src="vent_cap1_fig1.png" alt="Espirograma" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap1_fig1.png</strong>Falta esta imagen (Espirograma esquemático)</div>'">
+                                <div class="image-caption">Figura 1. Espirograma esquemático con volúmenes y capacidades.</div>
+                            </div>
+
+                            <h2>1.3 Ventilación minuto y ventilación alveolar</h2>
+                            <p>La ventilación minuto es el volumen total que se mueve por minuto, \\(\\dot{V}_E = f V_T\\). Solo una parte llega a los alvéolos: la <strong>ventilación alveolar</strong> es <strong>\\(\\dot{V}_A = f (V_T - V_D)\\)</strong> y es la que controla la presión arterial de CO₂. Con la producción de CO₂ del cuerpo (\\(\\dot{V}_{CO_2}\\) en mL/min), la relación es:</p>
+                            <div class="formula">\\( P_{aCO_2} \\approx 0.863 \\frac{\\dot{V}_{CO_2}}{\\dot{V}_A} \\)</div>
+                            <p>La consecuencia práctica es que respirar más rápido y superficial aumenta \\(\\dot{V}_E\\) pero puede reducir poco o nada \\(\\dot{V}_A\\), porque el espacio muerto se restó con más frecuencia.</p>
+
+                            <h2>1.4 Mecánica: distensibilidad, resistencia y constante de tiempo</h2>
+                            <p>El pulmón y la caja torácica se comportan como un elemento elástico (almacena energía) en serie con un elemento resistivo (la vía aérea disipa energía).</p>
+                            <ul>
+                                <li><strong>Distensibilidad (C):</strong> \\( C = \\Delta V / \\Delta P \\). Un sistema rígido (fibrosis, edema, SDRA) tiene C baja; en un adulto sano ventilado el valor ronda 50–100 mL/cmH₂O.</li>
+                                <li><strong>Resistencia (R):</strong> \\( R = \\Delta P / \\dot{V} \\). Para flujo laminar, la ley de <span class="searchable">Hagen-Poiseuille</span> da \\( R = 8\\eta L / (\\pi r^4) \\): la resistencia crece con la cuarta potencia inversa del radio. Valores típicos: 5–15 cmH₂O/(L/s).</li>
+                            </ul>
+                            <p>La ecuación de movimiento del sistema respiratorio es <strong>\\( P_{aw} = \\text{PEEP} + V/C + R\\dot{V} \\)</strong>. Es la ecuación de un circuito RC en serie: la presión aplicada se reparte entre el capacitor (elasticidad) y la resistencia.</p>
+                            <p>Si se aplica una presión constante, el volumen y el flujo siguen una exponencial: \\( V(t) = C \\Delta P (1 - e^{-t/\\tau}) \\), con <strong>\\(\\tau = R \\cdot C\\)</strong>. En \\(t = \\tau\\) el pulmón alcanza 63% de su volumen final; en 3\\(\\tau\\), 95%. Una constante de tiempo larga (obstrucción) exige más tiempo espiratorio.</p>
+
+                            <h2>1.5 Intercambio gaseoso</h2>
+                            <p>El oxígeno que llega al alvéolo se calcula con la ecuación del gas alveolar:</p>
+                            <div class="formula">\\( P_{AO_2} = \\text{FiO}_2 (P_B - P_{H_2O}) - \\frac{P_{aCO_2}}{RQ} \\)</div>
+                            <p>con \\(P_{H_2O} = 47\\) mmHg y \\(RQ \\approx 0.8\\). A nivel del mar (\\(P_B = 760\\)), la \\(P_{AO_2}\\) es ~100 mmHg. En la Ciudad de México (\\(P_B \\approx 585\\)), cae a ~63 mmHg. Un equipo calibrado con valores de nivel del mar debe corregirse por altitud.</p>
+                        `
+                    },
+                    {
+                        id: "vent-cap2", title: "Cap 2: Medición",
+                        content: `
+                            <span class="subtitle">Ventilación - Capítulo 2</span>
+                            <h1>Medición de Flujo y Gases</h1>
+                            <h2>2.1 Principios de los sensores de flujo</h2>
+                            <table>
+                                <tr><th>Sensor</th><th>Principio</th><th>Ventajas / Limitaciones</th></tr>
+                                <tr><td><span class="searchable">Neumotacógrafo</span></td><td>Caída de presión en un elemento resistivo</td><td>Exacto y rápido; sensible a humedad y secreciones</td></tr>
+                                <tr><td><span class="searchable">Turbina</span></td><td>Velocidad de giro de una hélice</td><td>Robusto y barato; inercia (error a flujos bajos)</td></tr>
+                                <tr><td>Hilo caliente</td><td>Enfriamiento de un filamento calentado</td><td>Sensible a flujos bajos; se contamina</td></tr>
+                                <tr><td><span class="searchable">Ultrasónico</span></td><td>Diferencia de tiempos de tránsito</td><td>Sin resistencia, no se obstruye; electrónica compleja</td></tr>
+                            </table>
+
+                            <div class="image-container">
+                                <img src="vent_cap2_fig1.png" alt="Neumotacógrafo" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap2_fig1.png</strong>Falta esta imagen (Neumotacógrafo de malla)</div>'">
+                                <div class="image-caption">Figura 1. Neumotacógrafo de malla y su característica presión-flujo.</div>
+                            </div>
+
+                            <h2>2.2 Del flujo al volumen: integración y deriva</h2>
+                            <p>El volumen se obtiene integrando el flujo: \\( V(t) = \\int \\dot{V} dt \\). Un desfase constante (offset) \\(\\varepsilon\\) del sensor se integra como una rampa y produce una deriva \\(\\varepsilon t\\). Por eso los equipos ponen el cero del sensor antes de cada maniobra y reinician la integral al comienzo de cada respiración.</p>
+
+                            <h2>2.3 Corrección BTPS</h2>
+                            <p>El aire espirado sale a ≈37 °C, saturado de vapor de agua; al enfriarse en el espirómetro se contrae. Por eso todos los resultados se reportan en condiciones <strong>BTPS</strong> (body temperature, pressure, saturated). El factor es:</p>
+                            <div class="formula">\\( F_{BTPS} = \\frac{273 + 37}{273 + T} \\cdot \\frac{P_B - P_{H_2O}(T)}{P_B - 47} \\)</div>
+                            <p>Omitir la corrección subestima FEV1 y FVC; puede producir errores de hasta 6%.</p>
+
+                            <h2>2.4 Calibración y verificación</h2>
+                            <p>El estándar ATS/ERS 2019 pide verificar el espirómetro al menos diariamente con una jeringa de 3 L (exacta a ±0.5%), inyectando al menos tres veces a distintos flujos. El volumen medido debe estar dentro de ±3% de 3.00 L.</p>
+
+                            <h2>2.5 Capnografía y oximetría</h2>
+                            <p>La <strong>capnografía</strong> mide el CO₂ por absorción de radiación infrarroja (ley de <span class="searchable">Beer-Lambert</span>). Puede ser de flujo principal (mainstream, sensor en el circuito) o lateral (sidestream, línea de muestreo). El capnograma tiene cuatro fases: espacio muerto, transición, meseta alveolar (PetCO₂) e inspiración. La <strong>oximetría de pulso</strong> estima la SpO₂ a partir de la absorción en dos longitudes de onda (≈660 y 940 nm).</p>
+                        `
+                    },
+                    {
+                        id: "vent-cap3", title: "Cap 3: Espirometría",
+                        content: `
+                            <span class="subtitle">Ventilación - Capítulo 3</span>
+                            <h1>Espirometría</h1>
+                            <h2>3.1 La maniobra y sus parámetros</h2>
+                            <p>En la <span class="searchable">espirometría</span> forzada el paciente inspira hasta la capacidad pulmonar total y espira con máximo esfuerzo y velocidad hasta el volumen residual. Se registran:</p>
+                            <ul>
+                                <li><strong>FVC:</strong> Capacidad vital forzada (L).</li>
+                                <li><strong>FEV1:</strong> Volumen espirado en el primer segundo (L).</li>
+                                <li><strong>FEV1/FVC:</strong> Cociente, el índice principal de obstrucción.</li>
+                                <li><strong>PEF:</strong> Flujo espiratorio pico (L/s), depende del esfuerzo.</li>
+                                <li><strong>FEF25-75:</strong> Flujo medio entre 25% y 75% de la FVC.</li>
+                            </ul>
+                            <p>Se grafican dos curvas: volumen-tiempo y flujo-volumen. La segunda muestra mejor la forma y revela patrones.</p>
+
+                            <div class="image-container">
+                                <img src="vent_cap3_fig1.png" alt="Curvas espirométricas" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap3_fig1.png</strong>Falta esta imagen (Curvas flujo-volumen y volumen-tiempo)</div>'">
+                                <div class="image-caption">Figura 1. Curvas flujo-volumen y volumen-tiempo.</div>
+                            </div>
+
+                            <h2>3.2 Patrones e interpretación</h2>
+                            <table>
+                                <tr><th>Patrón</th><th>FEV1/FVC</th><th>FVC</th><th>Forma de la curva flujo-volumen</th><th>Ejemplos</th></tr>
+                                <tr><td>Normal</td><td>Normal</td><td>Normal</td><td>Descenso casi lineal desde el PEF</td><td>—</td></tr>
+                                <tr><td>Obstructivo</td><td>Baja</td><td>Normal o baja</td><td>Cóncava ("en cuchara"), PEF y flujos bajos</td><td>EPOC, asma</td></tr>
+                                <tr><td>Restrictivo (sospecha)</td><td>Normal o alto</td><td>Baja</td><td>Estrecha, pero de forma conservada</td><td>Fibrosis, obesidad</td></tr>
+                                <tr><td>Mixto</td><td>Baja</td><td>Baja</td><td>Cóncava y estrecha</td><td>Combinación</td></tr>
+                            </table>
+                            <p>Una FVC baja con cociente normal sugiere, pero no confirma, restricción: se requiere medir la capacidad pulmonar total.</p>
+
+                            <h2>3.3 Valores de referencia y puntaje z</h2>
+                            <p>Cada resultado se compara con el valor predicho para edad, sexo, talla y origen étnico (ecuaciones GLI-2012). Se usa el <strong>límite inferior de normalidad (LIN)</strong>, el percentil 5 de la población sana, que equivale a un puntaje z de -1.645:</p>
+                            <div class="formula">\\( z = \\frac{\\text{observado} - \\text{predicho}}{\\text{desviación estándar residual}} \\quad ; \\quad \\text{LIN} = \\text{predicho} - 1.645 \\text{ SD} \\)</div>
+                            <p>Un valor es anormal cuando está por debajo del LIN.</p>
+
+                            <h2>3.4 Criterios de aceptabilidad (ATS/ERS 2019)</h2>
+                            <ul>
+                                <li>Inicio rápido: volumen de extrapolación retrógrada (BEV) ≤ 5% de la FVC o 0.100 L.</li>
+                                <li>Sin tos en el primer segundo, ni cierre de glotis, ni fuga.</li>
+                                <li>Final de espiración válido: meseta (cambio de volumen ≤ 0.025 L en el último segundo) o tiempo espiratorio de 15 s.</li>
+                                <li>Repetibilidad: las dos mayores FVC y FEV1 difieren ≤ 0.150 L. Se requieren al menos tres maniobras aceptables.</li>
+                            </ul>
+                        `
+                    },
+                    {
+                        id: "vent-cap4", title: "Cap 4: Ventilador",
+                        content: `
+                            <span class="subtitle">Ventilación - Capítulo 4</span>
+                            <h1>El Ventilador Mecánico</h1>
+                            <h2>4.1 Arquitectura y variables de fase</h2>
+                            <p>Un ventilador es un sistema de control en lazo cerrado. Sus bloques son: fuente de gas, mezclador (FiO2), válvula inspiratoria, sensores de flujo y presión, válvula espiratoria (mantiene PEEP), humidificador y microcontrolador.</p>
+                            <p>Cada respiración se describe con cuatro variables de fase:</p>
+                            <ul>
+                                <li><strong>Disparo (trigger):</strong> Qué inicia la inspiración. Por tiempo o por esfuerzo del paciente (caída de presión o cambio de flujo).</li>
+                                <li><strong>Control:</strong> La variable que el equipo regula: flujo/volumen (VCV) o presión (PCV).</li>
+                                <li><strong>Límite:</strong> Una variable que no debe sobrepasar el valor ajustado (presión máxima).</li>
+                                <li><strong>Ciclado (cycle):</strong> Qué termina la inspiración: tiempo, volumen o caída del flujo inspiratorio a un porcentaje de su pico (en soporte de presión).</li>
+                            </ul>
+
+                            <div class="image-container">
+                                <img src="vent_cap4_fig1.png" alt="Diagrama del ventilador" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap4_fig1.png</strong>Falta esta imagen (Diagrama de bloques del ventilador)</div>'">
+                                <div class="image-caption">Figura 1. Diagrama de bloques de un ventilador mecánico.</div>
+                            </div>
+
+                            <h2>4.2 Modos ventilatorios</h2>
+                            <table>
+                                <tr><th>Modo</th><th>Qué regula</th><th>Qué varía</th><th>Comentario</th></tr>
+                                <tr><td>VCV (Asistido/controlado por volumen)</td><td>Volumen VT y flujo constante</td><td>Paw (pico y meseta)</td><td>Garantiza volumen; la presión depende de C y R</td></tr>
+                                <tr><td>PCV (Asistido/controlado por presión)</td><td>Presión inspiratoria</td><td>VT y flujo (decelerante)</td><td>Limita presión; el volumen cambia si cambian C o R</td></tr>
+                                <tr><td>PSV (Soporte de presión)</td><td>Presión constante mientras dura la inspiración del paciente</td><td>VT, frecuencia</td><td>Ciclado por flujo; paciente con impulso respiratorio</td></tr>
+                                <tr><td>SIMV</td><td>Respiraciones mandatorias sincronizadas + espontáneas</td><td>—</td><td>Las espontáneas suelen llevar soporte de presión</td></tr>
+                                <tr><td>CPAP</td><td>Presión constante (sin soporte)</td><td>—</td><td>Respiración espontánea con PEEP</td></tr>
+                            </table>
+
+                            <h2>4.3 Ecuaciones y presiones</h2>
+                            <p>En VCV con flujo constante, la presión sube como rampa. Al final de la inspiración alcanza el pico:</p>
+                            <div class="formula">\\( P_{pico} = \\text{PEEP} + V_T/C + R\\dot{V} \\)</div>
+                            <p>Si se hace una pausa inspiratoria (flujo cero), la presión cae a la meseta:</p>
+                            <div class="formula">\\( P_{plat} = \\text{PEEP} + V_T/C \\)</div>
+                            <p>Con la pausa se miden la distensibilidad estática \\( C_{est} = V_T/(P_{plat} - \\text{PEEP}) \\) y la resistencia inspiratoria \\( R = (P_{pico} - P_{plat})/\\dot{V} \\). La <strong>presión de conducción</strong> es \\(\\Delta P = P_{plat} - \\text{PEEP} = V_T/C_{est}\\).</p>
+
+                            <div class="image-container">
+                                <img src="vent_cap4_fig2.png" alt="Presión, flujo y volumen" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap4_fig2.png</strong>Falta esta imagen (Presión, flujo y volumen en una respiración)</div>'">
+                                <div class="image-caption">Figura 2. Presión, flujo y volumen en una respiración.</div>
+                            </div>
+
+                            <h2>4.4 Espiración, tiempo espiratorio y auto-PEEP</h2>
+                            <p>La espiración es pasiva: el volumen decae como \\(e^{-t/\\tau}\\). Si el tiempo espiratorio \\(T_E\\) no basta para vaciar el pulmón (menos de 3\\(\\tau\\) a 5\\(\\tau\\)), el flujo espiratorio no llega a cero antes de la siguiente inspiración y queda gas atrapado: <strong>PEEP intrínseca o <span class="searchable">auto-PEEP</span></strong>.</p>
+                            <div class="formula">\\( V_{atr} = V_T \\frac{e^{-T_E/\\tau}}{1 - e^{-T_E/\\tau}} \\quad ; \\quad \\text{PEEP}_i = \\frac{V_{atr}}{C} \\)</div>
+                            <p>El auto-PEEP aumenta la presión media, puede producir hiperinflación y obliga al paciente a un esfuerzo extra para disparar el ventilador. En la curva de flujo se reconoce porque la curva espiratoria termina sin volver a cero.</p>
+
+                            <div class="image-container">
+                                <img src="vent_cap4_fig3.png" alt="Auto-PEEP" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap4_fig3.png</strong>Falta esta imagen (Lazo presión-volumen y auto-PEEP)</div>'">
+                                <div class="image-caption">Figura 3. Lazo presión-volumen y flujo espiratorio con auto-PEEP.</div>
+                            </div>
+
+                            <h2>4.5 Ventilación protectora</h2>
+                            <p>El ensayo del ARDS Network demostró que un VT de 6 mL/kg de PBW con meseta ≤ 30 cmH₂O reduce la mortalidad frente a 12 mL/kg. Desde entonces, la práctica estándar en SDRA es VT de 4 a 8 mL/kg de PBW con Pplat ≤ 30 y \\(\\Delta P \\le 15\\) cmH₂O.</p>
+                        `
+                    },
+                    {
+                        id: "vent-cap5", title: "Cap 5: Seguridad",
+                        content: `
+                            <span class="subtitle">Ventilación - Capítulo 5</span>
+                            <h1>Seguridad, Alarmas y Normas</h1>
+                            <h2>5.1 Riesgos de la ventilación mecánica</h2>
+                            <ul>
+                                <li><strong>Barotrauma y volutrauma:</strong> Presión o volumen excesivos rompen alvéolos (neumotórax).</li>
+                                <li><strong>Atelectrauma y biotrauma:</strong> Apertura y cierre cíclicos de alvéolos y liberación de mediadores inflamatorios.</li>
+                                <li><strong>Hipoventilación o hiperventilación:</strong> Error de VT, fuga, deriva del sensor o cambio de C y R.</li>
+                                <li><strong>Hipoxia:</strong> Falla del suministro de O2, mezclador o desconexión.</li>
+                                <li><strong>Auto-PEEP e hiperinflación.</strong></li>
+                                <li><strong>Infección</strong> asociada al circuito, filtros y humidificadores.</li>
+                                <li><strong>Falla de energía o de gas:</strong> Exige respaldo de batería y alarma.</li>
+                            </ul>
+
+                            <h2>5.2 Alarmas</h2>
+                            <p>El sistema de alarmas debe cumplir la norma <strong>IEC 60601-1-8</strong>, que define prioridades alta, media y baja, y su presentación auditiva y visual. Ejemplos de prioridad alta: apnea, presión alta o baja, desconexión, falla de suministro de oxígeno, batería baja.</p>
+                            <p>Un buen diseño evita la <strong>fatiga por alarmas</strong>: demasiadas alarmas de baja relevancia hacen que el personal las ignore.</p>
+
+                            <h2>5.3 Normas aplicables</h2>
+                            <ul>
+                                <li><strong>ISO 80601-2-12:</strong> Seguridad básica y desempeño esencial de ventiladores de cuidados críticos.</li>
+                                <li><strong>IEC 60601-1</strong> (seguridad eléctrica) e <strong>IEC 60601-1-2</strong> (compatibilidad electromagnética).</li>
+                                <li><strong>ISO 26782:</strong> Espirómetros.</li>
+                                <li><strong>NOM-240-SSA1-2012:</strong> Tecnovigilancia en México.</li>
+                            </ul>
+
+                            <h2>5.4 Verificación de desempeño</h2>
+                            <p>La prueba típica consiste en conectar un pulmón de prueba con C y R conocidas y comparar las mediciones del ventilador con las de un analizador de flujo de gas de referencia: volumen corriente, flujo, presión (pico, meseta y PEEP), FiO2 y tiempos. También se verifican las alarmas (desconexión, oclusión, apnea, corte de energía) y el cambio a batería.</p>
+                        `
+                    },
+                    {
+                        id: "vent-cap6", title: "Cap 6: Clínica",
+                        content: `
+                            <span class="subtitle">Ventilación - Capítulo 6</span>
+                            <h1>Aplicaciones Clínicas y Equipos Comerciales</h1>
+                            <h2>6.1 Escenarios clínicos</h2>
+                            <ul>
+                                <li><strong>SDRA:</strong> Pulmón rígido y heterogéneo (baja C). Se usa VT de 6 mL/kg de PBW, meseta ≤ 30 y \\(\\Delta P\\) baja, con PEEP elevada y FiO2 ajustada. El equipo debe medir Pplat y permitir la pausa inspiratoria.</li>
+                                <li><strong>EPOC agudizada o asma grave:</strong> R alta y \\(\\tau\\) larga: el riesgo es el auto-PEEP. Se baja la frecuencia y se prolonga \\(T_E\\) (relación I:E de 1:3 a 1:4), y se vigila la curva de flujo y el valor de PEEP_i.</li>
+                                <li><strong>Destete:</strong> Se evalúa si el paciente puede respirar solo con una prueba de respiración espontánea. El índice RSBI (f/VT) < 105 predice éxito. El ultrasonido diafragmático aporta una medida complementaria.</li>
+                            </ul>
+
+                            <h2>6.2 Equipos comerciales</h2>
+                            <table>
+                                <tr><th>Característica</th><th>HAMILTON-C6</th><th>Dräger Evita V800</th><th>Puritan Bennett 980</th></tr>
+                                <tr><td>Pacientes</td><td>Adulto, pediátrico y neonatal</td><td>Adulto, pediátrico y neonatal</td><td>Neonatos a adultos</td></tr>
+                                <tr><td>VT</td><td>20-2000 mL (neonatal 2-300)</td><td>100-3000 mL (adulto)</td><td>25-2500 mL</td></tr>
+                                <tr><td>Frecuencia</td><td>1-80 (neonatal 1-150)</td><td>0.5-98 (adulto)</td><td>1-100</td></tr>
+                                <tr><td>Flujo inspiratorio</td><td>Máximo 260 L/min</td><td>Máximo 180 L/min</td><td>3-150 L/min</td></tr>
+                                <tr><td>Batería</td><td>≥90 min (1), ≥180 min (2)</td><td>30 min</td><td>Respaldo, duración no listada</td></tr>
+                            </table>
+
+                            <h2>6.3 Ciclo de vida hospitalario</h2>
+                            <ol>
+                                <li><strong>Selección:</strong> Requisitos clínicos y costo total de propiedad.</li>
+                                <li><strong>Aceptación:</strong> Verificación con pulmón de prueba y analizador de flujo.</li>
+                                <li><strong>Uso:</strong> Parámetros basados en PBW, ajuste de alarmas.</li>
+                                <li><strong>Mantenimiento:</strong> Calibración de sensores, reemplazo de filtros y baterías.</li>
+                                <li><strong>Control de infecciones:</strong> Circuitos desechables y filtros.</li>
+                                <li><strong>Tecnovigilancia:</strong> Notificación de incidentes y alertas.</li>
+                            </ol>
+                        `
+                    },
+                    {
+                        id: "vent-anexos", title: "Anexos",
+                        content: `
+                            <span class="subtitle">Ventilación - Anexos</span>
+                            <h1>Formulario y Glosario</h1>
+                            <h3>Formulario Clave</h3>
+                            <table>
+                                <tr><th>Magnitud</th><th>Expresión</th><th>Notas</th></tr>
+                                <tr><td>Ventilación minuto</td><td>V̇E = f VT</td><td>f en resp/min, VT en L</td></tr>
+                                <tr><td>Ventilación alveolar</td><td>V̇A = f (VT - VD)</td><td>Controla la PaCO2</td></tr>
+                                <tr><td>PaCO2</td><td>PaCO2 ≈ 0.863 V̇CO2/V̇A</td><td>V̇CO2 en mL/min</td></tr>
+                                <tr><td>Peso corporal predicho (H)</td><td>PBW = 50 + 0.91(h-152.4)</td><td>h en cm</td></tr>
+                                <tr><td>Peso corporal predicho (M)</td><td>PBW = 45.5 + 0.91(h-152.4)</td><td>h en cm</td></tr>
+                                <tr><td>Ecuación de movimiento</td><td>Paw = PEEP + V/C + R V̇</td><td>Circuito RC</td></tr>
+                                <tr><td>Distensibilidad estática</td><td>Cest = VT/(Pplat - PEEP)</td><td>Con pausa inspiratoria</td></tr>
+                                <tr><td>Distensibilidad dinámica</td><td>Cdin = VT/(Ppico - PEEP)</td><td>Incluye el efecto de R</td></tr>
+                                <tr><td>Resistencia</td><td>R = (Ppico - Pplat)/V̇</td><td>V̇ en L/s</td></tr>
+                                <tr><td>Constante de tiempo</td><td>τ = R C</td><td>Vaciado ≈95% a 3τ</td></tr>
+                                <tr><td>Presión de conducción</td><td>ΔP = Pplat - PEEP</td><td>Objetivo ≤15 cmH2O</td></tr>
+                                <tr><td>Volumen atrapado</td><td>Vatr = VT e^(-TE/τ)/(1 - e^(-TE/τ))</td><td>Respiración pasiva</td></tr>
+                                <tr><td>Auto-PEEP</td><td>PEEPi = Vatr/C</td><td>Con C estática</td></tr>
+                                <tr><td>Factor BTPS</td><td>FBTPS = (310/(273+T)) · ((PB-PH2O)/(PB-47))</td><td>T en °C</td></tr>
+                                <tr><td>Puntaje z espirometría</td><td>z = (x - predicho)/DE; LIN = predicho - 1.645 DE</td><td>GLI-2012</td></tr>
+                                <tr><td>RSBI</td><td>f/VT</td><td>Éxito de destete si <105</td></tr>
+                            </table>
+                        `
+                    }
+                ]
+            }
+        };
+
+        function renderDocs() {
+            for (let docId in docsData) {
+                let doc = docsData[docId];
+                let menuContainer = document.getElementById(doc.menuId);
+                let contentContainer = document.getElementById(doc.contentId);
+                let menuHTML = "", contentHTML = "";
+
+                doc.chapters.forEach((chapter, index) => {
+                    let activeClass = index === 0 ? "active" : "";
+                    menuHTML += `<button class="${activeClass}" onclick="openTab(event, '${docId}', '${chapter.id}')">${chapter.title}</button>`;
+                    contentHTML += `<div id="${chapter.id}" class="tab-content ${activeClass}">${chapter.content}</div>`;
+                });
+
+                menuContainer.innerHTML = menuHTML;
+                contentContainer.innerHTML = contentHTML;
+            }
+        }
+        renderDocs();
+
+        function switchDoc(evt, docId) {
+            var docs = document.getElementsByClassName("doc-section");
+            for (var i = 0; i < docs.length; i++) docs[i].classList.remove("active");
+            document.getElementById(docId).classList.add("active");
+            
+            let mainContainer = document.getElementById("mainContainer");
+            mainContainer.classList.remove("theme-us", "theme-vent");
+            if (docId === "doc-us") {
+                mainContainer.classList.add("theme-us");
+            } else {
+                mainContainer.classList.add("theme-vent");
+            }
+
+            var btns = document.getElementsByClassName("doc-selector")[0].getElementsByTagName("button");
+            for (var i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        function openTab(evt, docId, tabName) {
+            var doc = document.getElementById(docId);
+            var tabcontents = doc.getElementsByClassName("tab-content");
+            for (var i = 0; i < tabcontents.length; i++) {
+                tabcontents[i].style.display = "none";
+                tabcontents[i].classList.remove("active");
+            }
+            var menu = doc.getElementsByClassName("nav-links")[0];
+            var tablinks = menu.getElementsByTagName("button");
+            for (var i = 0; i < tablinks.length; i++) tablinks[i].classList.remove("active");
+
+            var selectedTab = document.getElementById(tabName);
+            selectedTab.style.display = "block";
+            setTimeout(function() { selectedTab.classList.add("active"); }, 10);
+            if(evt) { evt.currentTarget.classList.add("active"); }
+        }
+
+        function normalizeText(text) {
+            return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+        }
+
+        // DICCIONARIO DE PALABRAS CLAVE
+        const keywords = {
+            "onda": { doc: "doc-us", cap: "us-cap1" }, "us1": { doc: "doc-us", cap: "us-cap1" }, "impedancia": { doc: "doc-us", cap: "us-cap1" }, "medios": { doc: "doc-us", cap: "us-cap1" }, "reflexion": { doc: "doc-us", cap: "us-cap1" }, "transmision": { doc: "doc-us", cap: "us-cap1" }, "frecuencia": { doc: "doc-us", cap: "us-cap1" }, "longitud": { doc: "doc-us", cap: "us-cap1" }, "velocidad": { doc: "doc-us", cap: "us-cap1" }, "snell": { doc: "doc-us", cap: "us-cap1" }, "densidad": { doc: "doc-us", cap: "us-cap1" }, "atenuacion": { doc: "doc-us", cap: "us-cap1" }, "penetracion": { doc: "doc-us", cap: "us-cap1" },
+            "us2": { doc: "doc-us", cap: "us-cap2" }, "sondas": { doc: "doc-us", cap: "us-cap2" }, "sonda": { doc: "doc-us", cap: "us-cap2" }, "lineal": { doc: "doc-us", cap: "us-cap2" }, "convexa": { doc: "doc-us", cap: "us-cap2" }, "sectorial": { doc: "doc-us", cap: "us-cap2" }, "transductor": { doc: "doc-us", cap: "us-cap2" }, "trasductor": { doc: "doc-us", cap: "us-cap2" },
+            "us3": { doc: "doc-us", cap: "us-cap3" }, "imagen": { doc: "doc-us", cap: "us-cap3" }, "prf": { doc: "doc-us", cap: "us-cap3" }, "frecuencia de repeticion de pulsos": { doc: "doc-us", cap: "us-cap3" }, "procesamiento": { doc: "doc-us", cap: "us-cap3" }, "acondicionamiento": { doc: "doc-us", cap: "us-cap3" }, "senal": { doc: "doc-us", cap: "us-cap3" }, "adc": { doc: "doc-us", cap: "us-cap3" }, "convertidor analogico digital": { doc: "doc-us", cap: "us-cap3" }, "artefacto": { doc: "doc-us", cap: "us-cap3" }, "artefactos": { doc: "doc-us", cap: "us-cap3" }, "tg": { doc: "doc-us", cap: "us-cap3" },
+            "us4": { doc: "doc-us", cap: "us-cap4" }, "doppler": { doc: "doc-us", cap: "us-cap4" }, "angulo critico": { doc: "doc-us", cap: "us-cap4" }, "aliasing": { doc: "doc-us", cap: "us-cap4" }, "nyquist": { doc: "doc-us", cap: "us-cap4" },
+            "us5": { doc: "doc-us", cap: "us-cap5" }, "normativa": { doc: "doc-us", cap: "us-cap5" }, "seguridad": { doc: "doc-us", cap: "us-cap5" }, "efecto": { doc: "doc-us", cap: "us-cap5" }, "alara": { doc: "doc-us", cap: "us-cap5" }, "as low as reasonably achievable": { doc: "doc-us", cap: "us-cap5" }, "iec": { doc: "doc-us", cap: "us-cap5" }, "nom": { doc: "doc-us", cap: "us-cap5" }, "eu": { doc: "doc-us", cap: "us-cap5" }, "e.e.u.u.": { doc: "doc-us", cap: "us-cap5" }, "eeuu": { doc: "doc-us", cap: "us-cap5" }, "60601-1-2": { doc: "doc-us", cap: "us-cap5" }, "62353": { doc: "doc-us", cap: "us-cap5" },
+            "us6": { doc: "doc-us", cap: "us-cap6" }, "pulmon": { doc: "doc-us", cap: "us-cap6" }, "pleura": { doc: "doc-us", cap: "us-cap6" }, "usp": { doc: "doc-us", cap: "us-cap6" }, "diafragma": { doc: "doc-us", cap: "us-cap6" }, "tecnica": { doc: "doc-us", cap: "us-cap6" }, "tf": { doc: "doc-us", cap: "us-cap6" }, "fraccion de engrosamiento": { doc: "doc-us", cap: "us-cap6" }, "protocolo blue": { doc: "doc-us", cap: "us-cap6" }, "blue": { doc: "doc-us", cap: "us-cap6" }, "preguntas": { doc: "doc-us", cap: "us-cap6" },
+            "us7": { doc: "doc-us", cap: "us-cap7" }, "butterfly": { doc: "doc-us", cap: "us-cap7" }, "categorias": { doc: "doc-us", cap: "us-cap7" }, "carro": { doc: "doc-us", cap: "us-cap7" }, "mano": { doc: "doc-us", cap: "us-cap7" }, "portatil": { doc: "doc-us", cap: "us-cap7" }, "pocus": { doc: "doc-us", cap: "us-cap7" }, "ge vscan air sl": { doc: "doc-us", cap: "us-cap7" }, "ciclo de vida hospitalario": { doc: "doc-us", cap: "us-cap7" }, "equipo": { doc: "doc-us", cap: "us-cap7" },
+            "formulario": { doc: "doc-us", cap: "us-anexos" }, "glosario y formulario": { doc: "doc-us", cap: "us-anexos" }, "spl": { doc: "doc-us", cap: "us-anexos" }, "tgc": { doc: "doc-us", cap: "us-anexos" }, "necesito ayuda": { doc: "doc-us", cap: "us-anexos" }, "final us": { doc: "doc-us", cap: "us-anexos" }, "anexo us": { doc: "doc-us", cap: "us-anexos" }, "usa": { doc: "doc-us", cap: "us-anexos" },
+            
+            "fisiologia": { doc: "doc-vent", cap: "vent-cap1" }, "alveolos": { doc: "doc-vent", cap: "vent-cap1" }, "espacio muerto": { doc: "doc-vent", cap: "vent-cap1" }, "vp1": { doc: "doc-vent", cap: "vent-cap1" }, "paco2": { doc: "doc-vent", cap: "vent-cap1" }, "pao2": { doc: "doc-vent", cap: "vent-cap1" }, "distensibilidad": { doc: "doc-vent", cap: "vent-cap1" }, "presion": { doc: "doc-vent", cap: "vent-cap1" },
+            "volumen": { doc: "doc-vent", cap: "vent-cap1" }, "pbw": { doc: "doc-vent", cap: "vent-cap1" }, "compliance": { doc: "doc-vent", cap: "vent-cap1" },
+            "medicion": { doc: "doc-vent", cap: "vent-cap2" }, "vp2": { doc: "doc-vent", cap: "vent-cap2" }, "turbina": { doc: "doc-vent", cap: "vent-cap2" }, "ultrasonico": { doc: "doc-vent", cap: "vent-cap2" }, "hilo caliente": { doc: "doc-vent", cap: "vent-cap2" }, "btps": { doc: "doc-vent", cap: "vent-cap2" }, "body temperature": { doc: "doc-vent", cap: "vent-cap2" }, "pressure": { doc: "doc-vent", cap: "vent-cap2" }, "saturated": { doc: "doc-vent", cap: "vent-cap2" }, "capnografia": { doc: "doc-vent", cap: "vent-cap2" }, "lambert": { doc: "doc-vent", cap: "vent-cap2" }, "beer": { doc: "doc-vent", cap: "vent-cap2" }, "ir": { doc: "doc-vent", cap: "vent-cap2" }, "infrarrojo": { doc: "doc-vent", cap: "vent-cap2" }, "660": { doc: "doc-vent", cap: "vent-cap2" }, "940": { doc: "doc-vent", cap: "vent-cap2" }, "neumotacografo": { doc: "doc-vent", cap: "vent-cap2" },
+            "espirometria": { doc: "doc-vent", cap: "vent-cap3" }, "fvc": { doc: "doc-vent", cap: "vent-cap3" }, "fev1": { doc: "doc-vent", cap: "vent-cap3" }, "cociente": { doc: "doc-vent", cap: "vent-cap3" }, "pef": { doc: "doc-vent", cap: "vent-cap3" }, "fef2575": { doc: "doc-vent", cap: "vent-cap3" }, "fef": { doc: "doc-vent", cap: "vent-cap3" }, "puntaje z": { doc: "doc-vent", cap: "vent-cap3" }, "ats": { doc: "doc-vent", cap: "vent-cap3" }, "ers": { doc: "doc-vent", cap: "vent-cap3" }, "2019": { doc: "doc-vent", cap: "vent-cap3" }, "bev": { doc: "doc-vent", cap: "vent-cap3" }, "vp3": { doc: "doc-vent", cap: "vent-cap3" },
+            "peep": { doc: "doc-vent", cap: "vent-cap4" }, "auto-peep": { doc: "doc-vent", cap: "vent-cap4" }, "vcv": { doc: "doc-vent", cap: "vent-cap4" },
+            "alarma": { doc: "doc-vent", cap: "vent-cap5" },
+            "sdra": { doc: "doc-vent", cap: "vent-cap6" }, "destete": { doc: "doc-vent", cap: "vent-cap6" }
+        };
+
+        // Atajos numéricos y de letras
+        const shortcuts = {
+            "1": { doc: "doc-us", cap: "us-cap1" }, "2": { doc: "doc-us", cap: "us-cap2" }, "3": { doc: "doc-us", cap: "us-cap3" }, "4": { doc: "doc-us", cap: "us-cap4" }, "5": { doc: "doc-us", cap: "us-cap5" }, "6": { doc: "doc-us", cap: "us-cap6" }, 
+            "7": { doc: "doc-us", cap: "us-cap7" },
+            "a": { doc: "doc-us", cap: "us-anexos" }, "anexos": { doc: "doc-us", cap: "us-anexos" }
+        };
+
+        // ==========================================
+        // DICCIONARIO INTERNO DE DEFINICIONES (AMPLIADO)
+        // ==========================================
+        const definitions = {
+            // Ultrasonido
+            "onda": "Fís. Perturbación que se propaga en un medio. En US, es longitudinal (compresiones y rarefacciones).",
+            "longitudinal": "Fís. Tipo de onda donde las partículas vibran en la misma dirección de propagación (sonido en tejidos).",
+            "compresiones": "Fís. Zonas de alta presión en una onda longitudinal.",
+            "rarefacciones": "Fís. Zonas de baja presión en una onda longitudinal.",
+            "velocidad": "Fís. Rapidez de propagación de la onda. En tejidos blandos se asume 1540 m/s.",
+            "resolucion": "Med. Capacidad de distinguir dos estructuras cercanas. Depende de la longitud de onda (axial) y del ancho del haz (lateral).",
+            "frecuencia": "Fís. Número de ciclos por segundo. En US diagnóstico: 1-40 MHz.",
+            "impedancia": "Fís. Resistencia acústica (Z = ρc). Genera los ecos en las fronteras entre tejidos.",
+            "snell": "Fís. Ley de refracción: relaciona los ángulos de incidencia y transmisión con las velocidades de los medios.",
+            "speckle": "Med. Patrón granulado típico de la imagen de órganos sólidos, producido por la dispersión de la onda.",
+            "penetracion": "Med. Profundidad máxima que alcanza el haz. Depende de la frecuencia (dmax ≈ 80/f).",
+            "piezoelectrico": "Fís. Material que se deforma con voltaje y genera voltaje al deformarse (PZT).",
+            "transductor": "Med. Dispositivo que convierte energía eléctrica en acústica y viceversa.",
+            "pzt": "Fís. Titanato Zirconato de Plomo. Material piezoeléctrico usado en las sondas de US.",
+            "sondas": "Med. Dispositivo que contiene el transductor. Tipos: lineal, convexa, sectorial.",
+            "lineal": "Med. Sonda de alta frecuencia (5-15 MHz) que produce un campo rectangular. Para estructuras superficiales.",
+            "convexa": "Med. Sonda de baja frecuencia (2-6 MHz) que produce un campo en abanico. Para abdomen y pulmón.",
+            "sectorial": "Med. Sonda de baja frecuencia (1-5 MHz) que produce un campo en abanico desde un punto. Para corazón.",
+            "fresnel": "Fís. Zona de campo cercano donde el haz se mantiene estrecho (N = D²/4λ).",
+            "resolucion axial": "Med. Capacidad de distinguir dos reflectores a lo largo del haz. Depende de la longitud del pulso (SPL/2).",
+            "resolucion lateral": "Med. Capacidad de distinguir dos reflectores perpendiculares al haz. Depende del ancho del haz.",
+            "prf": "Med. Frecuencia de Repetición de Pulsos. Determina cuántos pulsos se emiten por segundo.",
+            "tgc": "Med. Ganancia por Profundidad (Time Gain Compensation). Amplifica más los ecos profundos para compensar la atenuación.",
+            "adc": "Ing. Convertidor Analógico-Digital. Transforma la señal eléctrica continua en datos digitales.",
+            "artefacto": "Med. Imagen que no corresponde a la anatomía real por suposiciones del equipo (ej. sombra acústica).",
+            "eritrocitos": "Med. Glóbulos rojos. Su movimiento es detectado por el efecto Doppler.",
+            "angulo critico": "Fís. Ángulo entre el haz y el flujo. Si es 90°, no hay señal Doppler (cos 90° = 0).",
+            "nyquist": "Fís. Límite de la frecuencia máxima medible sin ambigüedad en Doppler pulsado (PRF/2).",
+            "aliasing": "Med. Plegamiento del espectro Doppler cuando la velocidad excede el límite de Nyquist.",
+            "cavitacion": "Fís. Formación y colapso de microburbujas por presión de rarefacción (riesgo mecánico).",
+            "alara": "Med. As Low As Reasonably Achievable. Principio de usar la mínima energía y tiempo en US.",
+            "fantomas": "Med. Objetos de prueba con propiedades acústicas conocidas para verificar el desempeño del equipo.",
+            "pleura": "Med. Membrana que recubre el pulmón. Su interfase con el aire genera la línea pleural en US.",
+            "diafragma": "Med. Músculo principal de la respiración. Se evalúa por US para predecir el destete.",
+            "pocus": "Med. Point-Of-Care Ultrasound. Ultrasonido a la cabecera del paciente (equipos de mano).",
+            
+            // Ventilación
+            "alveolos": "Med. Sacos de aire en los pulmones donde ocurre el intercambio gaseoso.",
+            "hagen-poiseuille": "Fís. Ley que describe el flujo laminar en un tubo. La resistencia depende de la 4ª potencia del radio.",
+            "neumotacografo": "Med. Sensor de flujo que mide la caída de presión en una malla o resistencia.",
+            "turbina": "Med. Sensor de flujo que mide la velocidad de giro de una hélice.",
+            "ultrasonico": "Med. Sensor de flujo que mide la diferencia de tiempo de tránsito del sonido a favor y en contra del flujo.",
+            "btps": "Med. Body Temperature, Pressure, Saturated. Condiciones estándar para reportar volúmenes espirados.",
+            "beer-lambert": "Fís. Ley que relaciona la absorción de luz con la concentración de un gas (usada en capnografía).",
+            "espirometria": "Med. Prueba de función pulmonar que mide volúmenes y flujos de aire.",
+            "auto-peep": "Med. Presión positiva al final de la espiración no programada, por vaciado incompleto del pulmón.",
+            "peep": "Med. Presión Positiva al Final de la Espiración. Mantiene los alvéolos abiertos.",
+            "vcv": "Med. Ventilación Controlada por Volumen. El equipo garantiza un volumen corriente fijo.",
+            "sdra": "Med. Síndrome de Dificultad Respiratoria Aguda. Pulmón rígido que requiere ventilación protectora."
+        };
+
+        // ==========================================
+        // LÓGICA DEL POP-UP (PREVISUALIZACIÓN + DEFINICIÓN + BÚSQUEDA CONTEXTUAL)
+        // ==========================================
+        const previewPopup = document.getElementById("previewPopup");
+        const previewHeader = document.getElementById("previewHeader");
+        const previewImg = document.getElementById("previewImg");
+        const previewDefinition = document.getElementById("previewDefinition");
+
+        let popupTimeout;
+        
+        document.addEventListener('mouseover', function(e) {
+            if (e.target.classList.contains('searchable')) {
+                const palabra = e.target.innerText.trim();
+                const palabraLower = normalizeText(palabra);
+                
+                // Mostrar el pop-up
+                clearTimeout(popupTimeout);
+                previewPopup.style.display = "block";
+                previewHeader.innerText = palabra;
+
+                // 1. Buscar definición en el diccionario interno
+                let def = "Definición no disponible en el diccionario interno.";
+                for (let key in definitions) {
+                    if (palabraLower.includes(key) || key.includes(palabraLower)) {
+                        def = definitions[key];
+                        break;
+                    }
+                }
+                previewDefinition.innerText = def;
+
+                // 2. Buscar imagen contextual (palabra + título del capítulo)
+                previewImg.style.display = "none";
+                
+                // Obtener el título del capítulo activo
+                const activeTab = document.querySelector('.tab-content.active');
+                let contextoTitulo = "";
+                if (activeTab) {
+                    const h2 = activeTab.querySelector('h2');
+                    if (h2) contextoTitulo = h2.innerText.split('.')[1] || h2.innerText; 
+                }
+                
+                // Construir consulta contextual (ej. "onda Física del Ultrasonido")
+                const queryContextual = `${palabra} ${contextoTitulo}`.trim();
+                
+                // Usar la API de Wikipedia con la consulta contextual
+                const wikiUrl = `https://es.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(queryContextual)}&prop=pageimages&format=json&pithumbsize=200&origin=*`;
+                
+                fetch(wikiUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        const pages = data.query.pages;
+                        const pageId = Object.keys(pages)[0];
+                        if (pages[pageId].thumbnail) {
+                            previewImg.src = pages[pageId].thumbnail.source;
+                            previewImg.style.display = "block";
+                        } else {
+                            // Si falla la contextual, intentar con la palabra sola
+                            const wikiUrlSimple = `https://es.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(palabra)}&prop=pageimages&format=json&pithumbsize=200&origin=*`;
+                            return fetch(wikiUrlSimple);
+                        }
+                    })
+                    .then(response => {
+                        if (response) return response.json();
+                    })
+                    .then(data => {
+                        if (data) {
+                            const pages = data.query.pages;
+                            const pageId = Object.keys(pages)[0];
+                            if (pages[pageId].thumbnail) {
+                                previewImg.src = pages[pageId].thumbnail.source;
+                                previewImg.style.display = "block";
+                            }
+                        }
+                    })
+                    .catch(() => { /* Ignorar error de imagen */ });
+
+                // Posicionar el pop-up
+                const rect = e.target.getBoundingClientRect();
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                let leftPos = rect.left + (rect.width / 2) - 160;
+                if (leftPos < 10) leftPos = 10; 
+                if (leftPos + 320 > window.innerWidth) leftPos = window.innerWidth - 330;
+
+                previewPopup.style.left = leftPos + "px";
+                previewPopup.style.top = (rect.top + scrollTop - 180) + "px";
+            }
+        });
+
+        document.addEventListener('mouseout', function(e) {
+            if (e.target.classList.contains('searchable')) {
+                popupTimeout = setTimeout(() => {
+                    if (!previewPopup.matches(':hover')) {
+                        previewPopup.style.display = "none";
+                    }
+                }, 300);
+            }
+        });
+
+        previewPopup.addEventListener('mouseenter', () => {
+            clearTimeout(popupTimeout);
+        });
+
+        previewPopup.addEventListener('mouseleave', () => {
+            previewPopup.style.display = "none";
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!previewPopup.contains(e.target) && !e.target.classList.contains('searchable')) {
+                previewPopup.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
