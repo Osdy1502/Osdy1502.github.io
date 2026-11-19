@@ -5,342 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apuntes Biomédicos: Ultrasonido y Ventilación</title>
     
-    <!-- MathJax para las fórmulas matemáticas -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <style>
-        /* =========================================
-           VARIABLES DE COLOR Y ESTILOS GENERALES
-           ========================================= */
         :root {
             --bg-main: #f4f7f6;
             --text-main: #2c3e50;
             --text-light: #64748b;
             --bg-card: #ffffff;
-            --us-color: #10b981; /* Verde Ultrasonido */
-            --vent-color: #2563eb; /* Azul oscuro Ventilación */
-            --current-accent: #10b981; /* Por defecto verde */
+            --us-color: #10b981;
+            --vent-color: #2563eb;
+            --current-accent: #10b981;
         }
 
-        html, body { 
-            margin: 0; 
-            padding: 0; 
-            background-color: var(--bg-main); 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            color: var(--text-main); 
-        }
-        .wrapper { 
-            display: flex; 
-            justify-content: center; 
-            min-height: 100vh; 
-            padding: 40px 20px; 
-            box-sizing: border-box; 
-        }
-        .container { 
-            background-color: var(--bg-card); 
-            max-width: 1000px; 
-            width: 100%; 
-            padding: 40px 60px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            border-radius: 12px;
-            height: fit-content; 
-            border-top: 6px solid var(--current-accent); 
-            transition: border-color 0.3s ease;
-        }
+        html, body { margin: 0; padding: 0; background-color: var(--bg-main); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: var(--text-main); }
+        .wrapper { display: flex; justify-content: center; min-height: 100vh; padding: 40px 20px; box-sizing: border-box; }
+        .container { background-color: var(--bg-card); max-width: 1000px; width: 100%; padding: 40px 60px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 12px; height: fit-content; border-top: 6px solid var(--current-accent); transition: border-color 0.3s ease; }
 
-        /* =========================================
-           PORTADA / ENCABEZADO Y BUSCADOR
-           ========================================= */
-        header { 
-            display: flex; 
-            flex-direction: column; 
-            border-bottom: 2px solid #e2e8f0; 
-            padding-bottom: 20px; 
-            margin-bottom: 30px; 
-        }
-        .portada {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .portada h1 {
-            font-size: 28px;
-            font-weight: 700;
-            margin: 0 0 10px 0;
-            color: var(--text-main);
-        }
-        .portada h2 {
-            font-size: 18px;
-            font-weight: 600;
-            margin: 0 0 15px 0;
-            color: var(--current-accent);
-            border: none;
-            padding: 0;
-        }
-        .portada p {
-            font-size: 15px;
-            margin: 5px 0;
-            color: var(--text-light);
-            text-align: center;
-        }
-        .portada .autor {
-            font-style: italic;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-        .portada .creditos {
-            font-size: 12px;
-            margin-top: 15px;
-            color: #94a3b8;
-        }
+        header { display: flex; flex-direction: column; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .portada { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0; }
+        .portada h1 { font-size: 28px; font-weight: 700; margin: 0 0 10px 0; color: var(--text-main); }
+        .portada h2 { font-size: 18px; font-weight: 600; margin: 0 0 15px 0; color: var(--current-accent); border: none; padding: 0; }
+        .portada p { font-size: 15px; margin: 5px 0; color: var(--text-light); text-align: center; }
+        .portada .autor { font-style: italic; font-weight: 600; color: var(--text-main); }
+        .portada .creditos { font-size: 12px; margin-top: 15px; color: #94a3b8; }
         
-        .doc-selector { 
-            display: flex; 
-            gap: 10px; 
-            margin-bottom: 20px; 
-            background-color: #f1f5f9; 
-            padding: 6px; 
-            border-radius: 8px; 
-        }
-        .doc-selector button { 
-            flex: 1; 
-            background: none; 
-            border: none; 
-            padding: 12px; 
-            color: var(--text-light); 
-            font-size: 14px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            border-radius: 6px; 
-            transition: all 0.3s ease; 
-        }
-        .doc-selector button:hover {
-            background-color: #e2e8f0;
-        }
-        .doc-selector button.active { 
-            background-color: var(--current-accent); 
-            color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+        .doc-selector { display: flex; gap: 10px; margin-bottom: 20px; background-color: #f1f5f9; padding: 6px; border-radius: 8px; }
+        .doc-selector button { flex: 1; background: none; border: none; padding: 12px; color: var(--text-light); font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 6px; transition: all 0.3s ease; }
+        .doc-selector button:hover { background-color: #e2e8f0; }
+        .doc-selector button.active { background-color: var(--current-accent); color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
-        .search-container { 
-            display: flex; 
-            gap: 10px; 
-            margin-bottom: 10px; 
-            background-color: #f8fafc; 
-            padding: 10px; 
-            border-radius: 8px; 
-            border: 1px solid #e2e8f0; 
-        }
-        #searchInput { 
-            flex-grow: 1; 
-            padding: 10px 15px; 
-            border: 1px solid #cbd5e1; 
-            border-radius: 6px; 
-            font-size: 14px; 
-            outline: none; 
-            transition: border-color 0.3s;
-        }
-        #searchInput:focus {
-            border-color: var(--current-accent);
-        }
-        #searchBtn { 
-            background-color: var(--text-main); 
-            color: white; 
-            border: none; 
-            padding: 10px 20px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-weight: 600; 
-            transition: background 0.3s;
-        }
-        #searchBtn:hover {
-            background-color: #1e293b;
-        }
-        #searchResult { 
-            font-size: 13px; 
-            color: var(--text-light); 
-            margin-top: 5px; 
-            display: none; 
-            padding: 10px; 
-            background-color: #f1f5f9; 
-            border-radius: 6px; 
-            border-left: 3px solid var(--current-accent);
-        }
+        .search-container { display: flex; gap: 10px; margin-bottom: 10px; background-color: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        #searchInput { flex-grow: 1; padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; transition: border-color 0.3s; }
+        #searchInput:focus { border-color: var(--current-accent); }
+        #searchBtn { background-color: var(--text-main); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: background 0.3s; }
+        #searchBtn:hover { background-color: #1e293b; }
+        #searchResult { font-size: 13px; color: var(--text-light); margin-top: 5px; display: none; padding: 10px; background-color: #f1f5f9; border-radius: 6px; border-left: 3px solid var(--current-accent); }
 
-        /* =========================================
-           NAVEGACIÓN DE CAPÍTULOS
-           ========================================= */
-        .nav-links { 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 5px; 
-            margin-bottom: 30px; 
-            border-bottom: 1px solid #e2e8f0; 
-            padding-bottom: 10px; 
-        }
-        .nav-links button { 
-            background: none; 
-            border: none; 
-            padding: 8px 15px; 
-            font-size: 13px; 
-            color: var(--text-light); 
-            cursor: pointer; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            border-bottom: 3px solid transparent; 
-            transition: all 0.3s; 
-        }
+        .nav-links { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 30px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        .nav-links button { background: none; border: none; padding: 8px 15px; font-size: 13px; color: var(--text-light); cursor: pointer; font-weight: 600; text-transform: uppercase; border-bottom: 3px solid transparent; transition: all 0.3s; }
         .nav-links button:hover { color: var(--text-main); }
-        .nav-links button.active { 
-            color: var(--current-accent); 
-            border-bottom: 3px solid var(--current-accent); 
-        }
+        .nav-links button.active { color: var(--current-accent); border-bottom: 3px solid var(--current-accent); }
 
-        /* =========================================
-           CONTENIDO DINÁMICO
-           ========================================= */
         .doc-section { display: none; }
         .doc-section.active { display: block; }
-        
-        .tab-content { 
-            display: none; 
-            animation: fadeIn 0.4s; 
-            max-width: 100%; 
-        }
+        .tab-content { display: none; animation: fadeIn 0.4s; max-width: 100%; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* =========================================
-           TIPOGRAFÍA Y ELEMENTOS
-           ========================================= */
-        .subtitle { 
-            font-size: 12px; 
-            text-transform: uppercase; 
-            letter-spacing: 1.5px; 
-            color: var(--current-accent); 
-            margin-bottom: 10px; 
-            display: block; 
-            font-weight: 700; 
-        }
+        .subtitle { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--current-accent); margin-bottom: 10px; display: block; font-weight: 700; }
         h1 { font-size: 34px; font-weight: 300; margin: 0 0 25px 0; color: var(--text-main); }
-        h2 { 
-            font-size: 22px; 
-            font-weight: 600; 
-            color: var(--text-main); 
-            margin-top: 35px; 
-            margin-bottom: 15px; 
-            border-left: 4px solid var(--current-accent); 
-            padding-left: 15px; 
-        }
+        h2 { font-size: 22px; font-weight: 600; color: var(--text-main); margin-top: 35px; margin-bottom: 15px; border-left: 4px solid var(--current-accent); padding-left: 15px; }
         h3 { font-size: 17px; font-weight: 700; color: var(--text-main); margin-top: 25px; margin-bottom: 10px; }
         p, ul { font-size: 15px; line-height: 1.7; color: #475569; margin-bottom: 15px; text-align: justify; }
         li { margin-bottom: 8px; }
         strong { color: var(--text-main); }
 
-        .formula { 
-            background-color: #f8fafc; 
-            padding: 15px; 
-            border-left: 4px solid var(--current-accent); 
-            margin: 20px 0; 
-            font-family: 'Courier New', monospace; 
-            font-size: 16px; 
-            text-align: center; 
-            overflow-x: auto; 
-            color: var(--text-main); 
-            border-radius: 0 6px 6px 0; 
-        }
+        .formula { background-color: #f8fafc; padding: 15px; border-left: 4px solid var(--current-accent); margin: 20px 0; font-family: 'Courier New', monospace; font-size: 16px; text-align: center; overflow-x: auto; color: var(--text-main); border-radius: 0 6px 6px 0; }
         
-        /* =========================================
-           ESTILOS PARA LAS IMÁGENES
-           ========================================= */
-        .image-container {
-            text-align: center;
-            margin: 30px 0;
-            padding: 15px;
-            background-color: #f8fafc;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-        }
-        .image-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 6px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .image-caption {
-            margin-top: 10px;
-            font-size: 13px;
-            color: var(--text-light);
-            font-style: italic;
-        }
-        .image-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 150px;
-            background-color: #f1f5f9;
-            border: 2px dashed #cbd5e1;
-            border-radius: 8px;
-            color: #94a3b8;
-            font-size: 14px;
-            margin: 20px 0;
-        }
-        .image-placeholder strong {
-            color: var(--text-main);
-            margin-bottom: 5px;
-        }
+        .image-container { text-align: center; margin: 30px 0; padding: 15px; background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .image-container img { max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .image-caption { margin-top: 10px; font-size: 13px; color: var(--text-light); font-style: italic; }
+        .image-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 150px; background-color: #f1f5f9; border: 2px dashed #cbd5e1; border-radius: 8px; color: #94a3b8; font-size: 14px; margin: 20px 0; }
+        .image-placeholder strong { color: var(--text-main); margin-bottom: 5px; }
 
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin: 25px 0; 
-            font-size: 14px; 
-            background-color: #fff; 
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        th, td { 
-            text-align: left; 
-            padding: 12px 15px; 
-            border-bottom: 1px solid #e2e8f0; 
-        }
-        th { 
-            font-weight: 600; 
-            color: var(--text-main); 
-            background-color: #f8fafc; 
-            border-bottom: 2px solid var(--current-accent); 
-        }
+        table { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 14px; background-color: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        th, td { text-align: left; padding: 12px 15px; border-bottom: 1px solid #e2e8f0; }
+        th { font-weight: 600; color: var(--text-main); background-color: #f8fafc; border-bottom: 2px solid var(--current-accent); }
         tr:hover { background-color: #f8fafc; }
         
-        /* =========================================
-           ESTILO DE LAS PALABRAS CLAVE (AMARILLO PÁLIDO, CURSIVA)
-           ========================================= */
-        .searchable { 
-            background-color: #fefce8; 
-            color: #475569; 
-            font-style: italic; 
-            padding: 0 2px; 
-            border-radius: 2px; 
-            cursor: help;
-            transition: background 0.2s, color 0.2s;
-        }
-        .searchable:hover {
-            background-color: #fef08a; 
-            color: #1e293b;
-            text-decoration: underline dotted #cbd5e1;
-        }
+        .searchable { background-color: #fefce8; color: #475569; font-style: italic; padding: 0 2px; border-radius: 2px; cursor: help; transition: background 0.2s, color 0.2s; }
+        .searchable:hover { background-color: #fef08a; color: #1e293b; text-decoration: underline dotted #cbd5e1; }
 
         .theme-us { --current-accent: var(--us-color); }
         .theme-vent { --current-accent: var(--vent-color); }
 
-        /* =========================================
-           ESTILOS DEL POP-UP (PREVISUALIZACIÓN)
-           ========================================= */
+        /* POP-UP */
         #previewPopup {
             display: none; 
             position: absolute;
@@ -349,22 +90,16 @@
             border: 1px solid #cbd5e1;
             border-radius: 8px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            width: 320px;
+            width: 280px;
             overflow: hidden;
             text-align: center;
             padding-bottom: 10px;
         }
-        #previewHeader {
-            background-color: var(--current-accent);
-            color: white;
-            padding: 8px;
-            font-size: 14px;
-            font-weight: bold;
-        }
+        #previewHeader { background-color: var(--current-accent); color: white; padding: 8px; font-size: 14px; font-weight: bold; }
         #previewContent {
-            min-height: 120px;
-            max-height: 250px; 
-            overflow-y: auto; 
+            min-height: 100px;
+            max-height: 220px;
+            overflow-y: auto;
             width: 100%;
             background-color: #f8fafc;
             display: flex;
@@ -374,35 +109,31 @@
             padding: 10px;
             box-sizing: border-box;
         }
-        #previewContent img {
-            max-width: 100%;
-            max-height: 120px;
-            object-fit: contain;
-            margin-bottom: 10px;
-            border-radius: 4px;
+        #previewContent img { max-width: 100%; max-height: 100px; object-fit: contain; margin-bottom: 10px; border-radius: 4px; }
+        #previewDefinition { font-size: 13px; color: var(--text-main); line-height: 1.5; text-align: left; padding: 0 10px; }
+
+        /* RESPONSIVE (MÓVIL) */
+        @media (max-width: 768px) {
+            .wrapper { padding: 10px; }
+            .container { padding: 20px 15px; }
+            .portada h1 { font-size: 22px; }
+            .portada h2 { font-size: 16px; }
+            .doc-selector { flex-direction: column; }
+            .nav-links { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 15px; -webkit-overflow-scrolling: touch; }
+            .nav-links button { white-space: nowrap; font-size: 12px; padding: 8px 10px; }
+            .search-container { flex-direction: column; }
+            #searchBtn { width: 100%; }
+            h1 { font-size: 26px; }
+            h2 { font-size: 18px; }
+            table { display: block; overflow-x: auto; white-space: nowrap; }
+            #previewPopup { width: 90%; left: 5% !important; }
         }
-        #previewDefinition {
-            font-size: 13px;
-            color: var(--text-main);
-            line-height: 1.5;
-            text-align: left;
-            padding: 0 10px;
-        }
-        .popup-actions {
-            padding: 10px 10px 0 10px;
-            display: flex;
-            gap: 5px;
-            justify-content: center;
-        }
-        buscarPalabra()
-        handleKeyPress()
     </style>
 </head>
 <body>
 
     <div class="wrapper">
         <div class="container theme-us" id="mainContainer">
-            <!-- PORTADA Y ENCABEZADO -->
             <header>
                 <div class="portada">
                     <h1>Página de Apuntes sobre Equipos Biomédicos</h1>
@@ -423,7 +154,6 @@
                 <div id="searchResult">Resultado de búsqueda...</div>
             </header>
 
-            <!-- CONTENEDORES -->
             <div id="doc-us" class="doc-section active">
                 <div class="nav-links" id="menu-us"></div>
                 <div id="content-us"></div>
@@ -436,7 +166,6 @@
         </div>
     </div>
 
-    <!-- POP-UP DE PREVISUALIZACIÓN (CON DEFINICIÓN INTERNA) -->
     <div id="previewPopup">
         <div id="previewHeader">Cargando...</div>
         <div id="previewContent">
@@ -445,7 +174,6 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT -->
     <script>
         const docsData = {
             "doc-us": {
@@ -462,8 +190,8 @@
                             <p>La longitud de onda (\\(\\lambda\\)) es la regla con la que se mide casi todo: la <span class="searchable">resolución</span>, la apertura del haz y el espesor de los materiales piezoeléctricos. Prácticamente: \\(\\lambda (\\text{mm}) = 1.54 / f (\\text{MHz})\\). A 5 MHz, \\(\\lambda = 0.31\\) mm; a 10 MHz, \\(\\lambda = 0.154\\) mm. A mayor <span class="searchable">frecuencia</span>, menor longitud de onda (y mejor resolución).</p>
                             
                             <div class="image-container">
-                                <img src="us_cap1_fig1.png" alt="Pérdida de ida y vuelta" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap1_fig1.png</strong>Falta esta imagen (Pérdida de ida y vuelta)</div>'">
-                                <div class="image-caption">Figura 1. Pérdida de ida y vuelta contra profundidad.</div>
+                                <img src="us_cap1_fig1.png" alt="Pérdida de ida y vuelta" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap1_fig1.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura 1. Pérdida de ida y vuelta contra profundidad para varias frecuencias y penetración máxima contra frecuencia.</div>
                             </div>
 
                             <h3>Tabla 1: Valores típicos de velocidad e impedancia acústica</h3>
@@ -493,7 +221,7 @@
                             <p>Al propagarse, la onda pierde intensidad por absorción (conversión a calor), dispersión y reflexión. En tejido blando la pérdida crece de forma lineal con la distancia y la frecuencia:</p>
                             <div class="formula">\\( A(\\text{dB}) = \\alpha \\cdot f \\cdot d_{\\text{recorrida}} \\quad \\text{con } \\alpha \\approx 0.5 \\text{ dB/(cm}\\cdot\\text{MHz)} \\)</div>
                             <p>Como el eco hace el viaje de ida y vuelta, la distancia recorrida es \\(2d\\), y la pérdida para un reflector a profundidad \\(d\\) es \\(A_{\\text{ida-vuelta}} = 2 \\alpha f d\\). Los equipos pueden mostrar un intervalo de amplitudes de unos 60 a 100 dB. Tomando 80 dB como cifra de trabajo, la <strong><span class="searchable">penetración</span> máxima</strong> es \\(d_{max} \\approx 80/f\\) cm (con \\(f\\) en MHz).</p>
-                            <p><strong>Ejemplo:</strong> Un reflector a 10 cm explorado con 3.5 MHz pierde \\(2(0.5)(3.5)(10) = 35\\) dB. Con 7.5 MHz la pérdida sería 75 dB, casi todo el intervalo dinámico: para esa profundidad conviene un transductor de baja frecuencia aunque pierda resolución.</p>
+                            <p><strong>Ejemplo 1.</strong> Un reflector a 10 cm explorado con 3.5 MHz pierde \\(2(0.5)(3.5)(10) = 35\\) dB. Con 7.5 MHz la pérdida sería 75 dB, casi todo el intervalo dinámico: para esa profundidad conviene un transductor de baja frecuencia aunque pierda resolución.</p>
 
                             <h2>1.4 Relación tiempo-profundidad</h2>
                             <p>El equipo mide el tiempo entre el pulso transmitido y el eco, y calcula la profundidad con el valor supuesto de \\(c\\):</p>
@@ -512,8 +240,8 @@
                             <p>El <strong>ancho de banda</strong> del transductor, la gama de frecuencias que emite y recibe bien, es mayor cuanto más corto es el pulso; hoy muchas <span class="searchable">sondas</span> son de banda ancha y permiten cambiar de frecuencia dentro de un intervalo.</p>
 
                             <div class="image-container">
-                                <img src="us_cap2_fig1.png" alt="Capas de un transductor" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap2_fig1.png</strong>Falta esta imagen (Capas de un transductor)</div>'">
-                                <div class="image-caption">Figura 1. Capas de un transductor.</div>
+                                <img src="us_cap2_fig1.png" alt="Capas de un transductor" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap2_fig1.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura 1. Capas de un transductor: respaldo, cerámica, capa de acoplamiento y lente.</div>
                             </div>
 
                             <h2>2.2 Tipos de sonda</h2>
@@ -525,7 +253,7 @@
                             </table>
 
                             <div class="image-container">
-                                <img src="us_cap2_fig2.png" alt="Haz sin foco y con foco" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap2_fig2.png</strong>Falta esta imagen (Haz sin foco y con foco)</div>'">
+                                <img src="us_cap2_fig2.png" alt="Haz sin foco y con foco" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap2_fig2.png</strong>Falta esta imagen</div>'">
                                 <div class="image-caption">Figura 2. Haz sin foco (campo cercano N) y con foco a 3 cm.</div>
                             </div>
 
@@ -563,8 +291,8 @@
                             </ul>
 
                             <div class="image-container">
-                                <img src="us_cap3_fig1.png" alt="TGC" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap3_fig1.png</strong>Falta esta imagen (Cinco reflectores idénticos / TGC)</div>'">
-                                <div class="image-caption">Figura 1. Cinco reflectores idénticos y la aplicación de TGC.</div>
+                                <img src="us_cap3_fig1.png" alt="TGC" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap3_fig1.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura 1. Cinco reflectores idénticos: el eco crudo decae con la profundidad y con TGC ideal se iguala.</div>
                             </div>
 
                             <h2>3.4 Artefactos</h2>
@@ -586,7 +314,7 @@
                             <h2>4.1 Efecto Doppler y velocidad del flujo</h2>
                             <p>Cuando los <span class="searchable">eritrocitos</span> se mueven respecto del transductor, la frecuencia del eco cambia. El corrimiento de frecuencia depende de la componente de la velocidad en la dirección del haz:</p>
                             <div class="formula">\\( f_d = \\frac{2 f_0 v \\cos\\theta}{c} \\quad \\Rightarrow \\quad v = \\frac{f_d c}{2 f_0 \\cos\\theta} \\)</div>
-                            <p>El <span class="searchable">ángulo crítico</span> \\(\\theta\\) es crítico: la estimación de \\(v\\) depende del ángulo asumido, y los ángulos cercanos a 90° son inútiles (cos 90° = 0). Se recomienda \\(\\theta \\le 60°\\), porque cerca de ese valor una pequeña desviación produce un error grande. <strong>Ejemplo:</strong> Si se asume 60° pero el ángulo real es 70°, la velocidad calculada es 0.68 de la real: subestima un 32%.</p>
+                            <p>El <span class="searchable">ángulo crítico</span> \\(\\theta\\) es crítico: la estimación de \\(v\\) depende del ángulo asumido, y los ángulos cercanos a 90° son inútiles (cos 90° = 0). Se recomienda \\(\\theta \\le 60°\\), porque cerca de ese valor una pequeña desviación produce un error grande. <strong>Ejemplo 4.</strong> Si se asume 60° pero el ángulo real es 70°, la velocidad calculada es 0.68 de la real: subestima un 32%.</p>
 
                             <h2>4.2 Doppler continuo, pulsado y color</h2>
                             <ul>
@@ -601,8 +329,8 @@
                             <p>Hay una limitación adicional: la PRF máxima la fija la profundidad (PRF \\(\\le c/2d\\)), de modo que <strong>no se pueden medir velocidades altas a gran profundidad con Doppler pulsado</strong>. Las soluciones prácticas son: subir la PRF, bajar la frecuencia del transductor, desplazar la línea de base, aumentar el ángulo (con cautela) o usar CW.</p>
                             
                             <div class="image-container">
-                                <img src="us_cap4_fig1.png" alt="Espectro Doppler" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap4_fig1.png</strong>Falta esta imagen (Espectro Doppler sin/con aliasing)</div>'">
-                                <div class="image-caption">Figura 1. Espectro Doppler sin aliasing y con aliasing.</div>
+                                <img src="us_cap4_fig1.png" alt="Espectro Doppler" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap4_fig1.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura 1. Espectro Doppler sin aliasing (PRF = 6 kHz) y con aliasing (PRF = 3 kHz) para la misma velocidad máxima.</div>
                             </div>
                         `
                     },
@@ -614,10 +342,10 @@
                             <h2>5.1 Bioefectos y sus índices</h2>
                             <p>El ultrasonido a las intensidades diagnósticas se considera seguro con un uso prudente, pero la energía acústica puede producir dos tipos de efectos, y los equipos muestran un índice para cada uno:</p>
                             <ul>
-                                <li><strong>Efecto térmico:</strong> El tejido absorbe energía y se calienta. El <strong>índice térmico (TI)</strong> es la razón entre la potencia emitida y la necesaria para elevar 1 °C. Se reporta como TIS (tejido blando), TIB (hueso) y TIC (craneal).</li>
+                                <li><strong>Efecto térmico:</strong> El tejido absorbe energía y se calienta, sobre todo en la interfase con hueso. El <strong>índice térmico (TI)</strong> es la razón entre la potencia emitida y la necesaria para elevar 1 °C. Se reporta como TIS (tejido blando), TIB (hueso) y TIC (craneal).</li>
                                 <li><strong>Efecto mecánico (<span class="searchable">cavitación</span>):</strong> Una presión de rarefacción alta puede hacer oscilar o colapsar microburbujas. El <strong>índice mecánico (MI)</strong> se calcula con la presión pico de rarefacción atenuada y la frecuencia: \\( MI = p_{r.3} / \\sqrt{f_c} \\).</li>
                             </ul>
-                            <p>La práctica clínica se resume en el principio <strong>ALARA</strong> (As Low As Reasonably Achievable): usar la mínima energía y el menor tiempo de exploración que den el diagnóstico. El Doppler deposita más energía que el modo B.</p>
+                            <p>La práctica clínica se resume en el principio <strong>ALARA</strong> (As Low As Reasonably Achievable): usar la mínima energía y el menor tiempo de exploración que den el diagnóstico. El Doppler pulsado y el color depositan más energía que el modo B.</p>
 
                             <h2>5.2 Límites regulatorios y requisitos</h2>
                             <p>En Estados Unidos (E.E.U.U.), la FDA establece límites: \\(I_{SPTA.3} \\le 720 \\text{ mW/cm}^2\\) y \\(MI \\le 1.9\\), y exige mostrar MI y TI cuando el equipo puede superar 1.0. La norma internacional es la <strong>IEC 60601-1-2</strong> (compatibilidad electromagnética) y la <strong>IEC 60601-2-37</strong>. En México se requiere registro sanitario (COFEPRIS) y tecnovigilancia (NOM-240-SSA1-2012). La seguridad eléctrica recurrente se verifica con la <strong>IEC 62353</strong>.</p>
@@ -640,8 +368,12 @@
                             <p>El pulmón normal está lleno de aire y la interfase tejido-aire refleja más del 99.9% de la intensidad: no hay "ventana acústica" hacia el interior. Lo que se ve son la <span class="searchable">pleura</span> y los artefactos que genera el aire. Las enfermedades que reducen el aire o aumentan el líquido cambian esos artefactos. El ultrasonido pulmonar es una herramienta de reconocimiento de patrones, útil y repetible a la cabecera del paciente.</p>
 
                             <div class="image-container">
-                                <img src="us_cap6_fig1.png" alt="Atlas sintético" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap6_fig1.png</strong>Falta esta imagen (Atlas sintético: pulmón normal, intersticial, consolidación)</div>'">
-                                <div class="image-caption">Figura 1. Atlas sintético de pulmón normal, síndrome intersticial y consolidación.</div>
+                                <img src="us_cap6_fig1.png" alt="Atlas sintético" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap6_fig1.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura 6. Atlas sintético: pulmón normal, síndrome intersticial y consolidación en modo B, y los patrones de modo M (orilla del mar y código de barras).</div>
+                            </div>
+                            <div class="image-container">
+                                <img src="us_cap6_fig2.png" alt="Patrones de modo M" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_cap6_fig2.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura 7. Patrones de modo M: orilla del mar y código de barras.</div>
                             </div>
 
                             <h2>6.2 Técnica y protocolos</h2>
@@ -700,12 +432,24 @@
                             <p><strong>SPL:</strong> Longitud espacial del pulso. <strong>PRF:</strong> Frecuencia de repetición de pulsos. <strong>TGC:</strong> Ganancia por profundidad. <strong>ALARA:</strong> Mínima energía.</p>
                             
                             <div class="image-container">
-                                <img src="us_anexo_fig1.png" alt="Reflexión y refracción" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_anexo_fig1.png</strong>Falta esta imagen (Reflexión y refracción)</div>'">
-                                <div class="image-caption">Figura A1. Reflexión y refracción en una frontera.</div>
+                                <img src="us_anexo_fig1.png" alt="Reflexión y refracción" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_anexo_fig1.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura A1. Reflexión y refracción en una frontera entre dos medios.</div>
                             </div>
                             <div class="image-container">
-                                <img src="us_anexo_fig2.png" alt="Tren de pulsos" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_anexo_fig2.png</strong>Falta esta imagen (Tren de pulsos)</div>'">
-                                <div class="image-caption">Figura A2. Parámetros temporales del pulso en el modo B.</div>
+                                <img src="us_anexo_fig2.png" alt="Tren de pulsos" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_anexo_fig2.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura A2. Tren de pulsos del modo B: parámetros temporales.</div>
+                            </div>
+                            <div class="image-container">
+                                <img src="us_anexo_fig3.png" alt="Campos de sonda" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_anexo_fig3.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura A3. Formas del campo de imagen de los tres tipos básicos de sonda.</div>
+                            </div>
+                            <div class="image-container">
+                                <img src="us_anexo_fig4.png" alt="Resolución axial" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_anexo_fig4.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura A4. Resolución axial: dos reflectores que se resuelven, están en el límite y se funden.</div>
+                            </div>
+                            <div class="image-container">
+                                <img src="us_anexo_fig5.png" alt="Artefactos" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>us_anexo_fig5.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura A5. Artefactos principales: sombra acústica, refuerzo posterior y reverberación.</div>
                             </div>
 
                             <h3>Formulario Clave</h3>
@@ -753,8 +497,8 @@
                             </table>
 
                             <div class="image-container">
-                                <img src="vent_cap1_fig1.png" alt="Espirograma" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap1_fig1.png</strong>Falta esta imagen (Espirograma esquemático)</div>'">
-                                <div class="image-caption">Figura 1. Espirograma esquemático con volúmenes y capacidades.</div>
+                                <img src="vent_cap1_fig1.png" alt="Espirograma" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap1_fig1.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura 1. Espirograma esquemático con volúmenes y capacidades (valores típicos de un adulto joven sano).</div>
                             </div>
 
                             <h2>1.3 Ventilación minuto y ventilación alveolar</h2>
@@ -792,8 +536,8 @@
                             </table>
 
                             <div class="image-container">
-                                <img src="vent_cap2_fig1.png" alt="Neumotacógrafo" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap2_fig1.png</strong>Falta esta imagen (Neumotacógrafo de malla)</div>'">
-                                <div class="image-caption">Figura 1. Neumotacógrafo de malla y su característica presión-flujo.</div>
+                                <img src="vent_cap2_fig1.png" alt="Neumotacógrafo" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap2_fig1.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura 1. Neumotacógrafo de malla y su característica presión diferencial-flujo.</div>
                             </div>
 
                             <h2>2.2 Del flujo al volumen: integración y deriva</h2>
@@ -828,8 +572,8 @@
                             <p>Se grafican dos curvas: volumen-tiempo y flujo-volumen. La segunda muestra mejor la forma y revela patrones.</p>
 
                             <div class="image-container">
-                                <img src="vent_cap3_fig1.png" alt="Curvas espirométricas" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap3_fig1.png</strong>Falta esta imagen (Curvas flujo-volumen y volumen-tiempo)</div>'">
-                                <div class="image-caption">Figura 1. Curvas flujo-volumen y volumen-tiempo.</div>
+                                <img src="vent_cap3_fig1.png" alt="Curvas espirométricas" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap3_fig1.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura 1. Curvas flujo-volumen (izquierda) y volumen-tiempo (derecha) en un patrón normal, uno obstructivo y uno restrictivo.</div>
                             </div>
 
                             <h2>3.2 Patrones e interpretación</h2>
@@ -862,17 +606,17 @@
                             <span class="subtitle">Ventilación - Capítulo 4</span>
                             <h1>El Ventilador Mecánico</h1>
                             <h2>4.1 Arquitectura y variables de fase</h2>
-                            <p>Un ventilador es un sistema de control en lazo cerrado. Sus bloques son: fuente de gas, mezclador (FiO2), válvula inspiratoria, sensores de flujo y presión, válvula espiratoria (mantiene PEEP), humidificador y microcontrolador.</p>
+                            <p>Un <span class="searchable">ventilador</span> es un sistema de control en lazo cerrado. Sus bloques son: fuente de gas, mezclador (FiO2), válvula inspiratoria, sensores de flujo y presión, válvula espiratoria (mantiene PEEP), humidificador y microcontrolador.</p>
                             <p>Cada respiración se describe con cuatro variables de fase:</p>
                             <ul>
-                                <li><strong>Disparo (trigger):</strong> Qué inicia la inspiración. Por tiempo o por esfuerzo del paciente (caída de presión o cambio de flujo).</li>
+                                <li><strong>Disparo (<span class="searchable">trigger</span>):</strong> Qué inicia la inspiración. Por tiempo o por esfuerzo del paciente (caída de presión o cambio de flujo).</li>
                                 <li><strong>Control:</strong> La variable que el equipo regula: flujo/volumen (VCV) o presión (PCV).</li>
                                 <li><strong>Límite:</strong> Una variable que no debe sobrepasar el valor ajustado (presión máxima).</li>
                                 <li><strong>Ciclado (cycle):</strong> Qué termina la inspiración: tiempo, volumen o caída del flujo inspiratorio a un porcentaje de su pico (en soporte de presión).</li>
                             </ul>
 
                             <div class="image-container">
-                                <img src="vent_cap4_fig1.png" alt="Diagrama del ventilador" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap4_fig1.png</strong>Falta esta imagen (Diagrama de bloques del ventilador)</div>'">
+                                <img src="vent_cap4_fig1.png" alt="Diagrama del ventilador" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap4_fig1.png</strong>Falta esta imagen</div>'">
                                 <div class="image-caption">Figura 1. Diagrama de bloques de un ventilador mecánico.</div>
                             </div>
 
@@ -889,23 +633,23 @@
                             <h2>4.3 Ecuaciones y presiones</h2>
                             <p>En VCV con flujo constante, la presión sube como rampa. Al final de la inspiración alcanza el pico:</p>
                             <div class="formula">\\( P_{pico} = \\text{PEEP} + V_T/C + R\\dot{V} \\)</div>
-                            <p>Si se hace una pausa inspiratoria (flujo cero), la presión cae a la meseta:</p>
+                            <p>Si se hace una pausa inspiratoria (flujo cero), la presión cae a la <span class="searchable">meseta</span>:</p>
                             <div class="formula">\\( P_{plat} = \\text{PEEP} + V_T/C \\)</div>
-                            <p>Con la pausa se miden la distensibilidad estática \\( C_{est} = V_T/(P_{plat} - \\text{PEEP}) \\) y la resistencia inspiratoria \\( R = (P_{pico} - P_{plat})/\\dot{V} \\). La <strong>presión de conducción</strong> es \\(\\Delta P = P_{plat} - \\text{PEEP} = V_T/C_{est}\\).</p>
+                            <p>Con la pausa se miden la <span class="searchable">distensibilidad</span> estática \\( C_{est} = V_T/(P_{plat} - \\text{PEEP}) \\) y la <span class="searchable">resistencia</span> inspiratoria \\( R = (P_{pico} - P_{plat})/\\dot{V} \\). La <strong>presión de conducción</strong> es \\(\\Delta P = P_{plat} - \\text{PEEP} = V_T/C_{est}\\).</p>
 
                             <div class="image-container">
-                                <img src="vent_cap4_fig2.png" alt="Presión, flujo y volumen" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap4_fig2.png</strong>Falta esta imagen (Presión, flujo y volumen en una respiración)</div>'">
-                                <div class="image-caption">Figura 2. Presión, flujo y volumen en una respiración.</div>
+                                <img src="vent_cap4_fig2.png" alt="Presión, flujo y volumen" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap4_fig2.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura 2. Presión, flujo y volumen en una respiración con C = 0.04 L/cmH2O, R = 10 cmH2O/(L/s), PEEP = 5 cmH2O.</div>
                             </div>
 
                             <h2>4.4 Espiración, tiempo espiratorio y auto-PEEP</h2>
                             <p>La espiración es pasiva: el volumen decae como \\(e^{-t/\\tau}\\). Si el tiempo espiratorio \\(T_E\\) no basta para vaciar el pulmón (menos de 3\\(\\tau\\) a 5\\(\\tau\\)), el flujo espiratorio no llega a cero antes de la siguiente inspiración y queda gas atrapado: <strong>PEEP intrínseca o <span class="searchable">auto-PEEP</span></strong>.</p>
                             <div class="formula">\\( V_{atr} = V_T \\frac{e^{-T_E/\\tau}}{1 - e^{-T_E/\\tau}} \\quad ; \\quad \\text{PEEP}_i = \\frac{V_{atr}}{C} \\)</div>
-                            <p>El auto-PEEP aumenta la presión media, puede producir hiperinflación y obliga al paciente a un esfuerzo extra para disparar el ventilador. En la curva de flujo se reconoce porque la curva espiratoria termina sin volver a cero.</p>
+                            <p>El <span class="searchable">auto-PEEP</span> aumenta la presión media, puede producir hiperinflación y obliga al paciente a un esfuerzo extra para disparar el ventilador. En la curva de flujo se reconoce porque la curva espiratoria termina sin volver a cero.</p>
 
                             <div class="image-container">
-                                <img src="vent_cap4_fig3.png" alt="Auto-PEEP" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap4_fig3.png</strong>Falta esta imagen (Lazo presión-volumen y auto-PEEP)</div>'">
-                                <div class="image-caption">Figura 3. Lazo presión-volumen y flujo espiratorio con auto-PEEP.</div>
+                                <img src="vent_cap4_fig3.png" alt="Auto-PEEP" onerror="this.parentElement.innerHTML='<div class=\\'image-placeholder\\'><strong>vent_cap4_fig3.png</strong>Falta esta imagen</div>'">
+                                <div class="image-caption">Figura 3. Lazo presión-volumen (pendiente = distensibilidad). Flujo espiratorio con tiempo suficiente y con auto-PEEP.</div>
                             </div>
 
                             <h2>4.5 Ventilación protectora</h2>
@@ -1093,9 +837,7 @@
             "a": { doc: "doc-us", cap: "us-anexos" }, "anexos": { doc: "doc-us", cap: "us-anexos" }
         };
 
-        // ==========================================
-        // DICCIONARIO INTERNO DE DEFINICIONES (AMPLIADO)
-        // ==========================================
+        // DICCIONARIO INTERNO DE DEFINICIONES
         const definitions = {
             // Ultrasonido
             "onda": "Fís. Perturbación que se propaga en un medio. En US, es longitudinal (compresiones y rarefacciones).",
@@ -1149,9 +891,7 @@
             "sdra": "Med. Síndrome de Dificultad Respiratoria Aguda. Pulmón rígido que requiere ventilación protectora."
         };
 
-        // ==========================================
-        // LÓGICA DEL POP-UP (PREVISUALIZACIÓN + DEFINICIÓN + BÚSQUEDA CONTEXTUAL)
-        // ==========================================
+        // LÓGICA DEL POP-UP
         const previewPopup = document.getElementById("previewPopup");
         const previewHeader = document.getElementById("previewHeader");
         const previewImg = document.getElementById("previewImg");
@@ -1164,12 +904,10 @@
                 const palabra = e.target.innerText.trim();
                 const palabraLower = normalizeText(palabra);
                 
-                // Mostrar el pop-up
                 clearTimeout(popupTimeout);
                 previewPopup.style.display = "block";
                 previewHeader.innerText = palabra;
 
-                // 1. Buscar definición en el diccionario interno
                 let def = "Definición no disponible en el diccionario interno.";
                 for (let key in definitions) {
                     if (palabraLower.includes(key) || key.includes(palabraLower)) {
@@ -1179,10 +917,8 @@
                 }
                 previewDefinition.innerText = def;
 
-                // 2. Buscar imagen contextual (palabra + título del capítulo)
                 previewImg.style.display = "none";
                 
-                // Obtener el título del capítulo activo
                 const activeTab = document.querySelector('.tab-content.active');
                 let contextoTitulo = "";
                 if (activeTab) {
@@ -1190,10 +926,7 @@
                     if (h2) contextoTitulo = h2.innerText.split('.')[1] || h2.innerText; 
                 }
                 
-                // Construir consulta contextual (ej. "onda Física del Ultrasonido")
                 const queryContextual = `${palabra} ${contextoTitulo}`.trim();
-                
-                // Usar la API de Wikipedia con la consulta contextual
                 const wikiUrl = `https://es.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(queryContextual)}&prop=pageimages&format=json&pithumbsize=200&origin=*`;
                 
                 fetch(wikiUrl)
@@ -1205,7 +938,6 @@
                             previewImg.src = pages[pageId].thumbnail.source;
                             previewImg.style.display = "block";
                         } else {
-                            // Si falla la contextual, intentar con la palabra sola
                             const wikiUrlSimple = `https://es.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(palabra)}&prop=pageimages&format=json&pithumbsize=200&origin=*`;
                             return fetch(wikiUrlSimple);
                         }
@@ -1223,15 +955,14 @@
                             }
                         }
                     })
-                    .catch(() => { /* Ignorar error de imagen */ });
+                    .catch(() => { });
 
-                // Posicionar el pop-up
                 const rect = e.target.getBoundingClientRect();
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 
-                let leftPos = rect.left + (rect.width / 2) - 160;
+                let leftPos = rect.left + (rect.width / 2) - 140;
                 if (leftPos < 10) leftPos = 10; 
-                if (leftPos + 320 > window.innerWidth) leftPos = window.innerWidth - 330;
+                if (leftPos + 280 > window.innerWidth) leftPos = window.innerWidth - 290;
 
                 previewPopup.style.left = leftPos + "px";
                 previewPopup.style.top = (rect.top + scrollTop - 180) + "px";
@@ -1262,5 +993,7 @@
             }
         });
     </script>
+</body>
+</html>
 </body>
 </html>
